@@ -75,6 +75,10 @@ public class ReservationManager {
     btSearch.setOnAction(event -> search());
     btSearch.setPrefWidth(UIDimensions.buttonWidthShort());
 
+    Button btReset = new Button("Suche zurücksetzen");
+    btReset.setOnAction(event -> reset());
+    btReset.setPrefWidth(UIDimensions.buttonWidthMedium());
+
     Button btDeleteReservation = new Button("Stornieren");
     btDeleteReservation.setOnAction(event -> deleteReservation(tbv.getSelectionModel().getSelectedItem().getReservationId()));
     btDeleteReservation.setPrefWidth(UIDimensions.buttonWidthShort());
@@ -105,6 +109,10 @@ public class ReservationManager {
     stage.setResizable(false);
 
     repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+  }
+
+  private void reset() {
+    tbv.setItems(FXCollections.observableArrayList(repository.getAllReservations()));
   }
 
   private void search() {
