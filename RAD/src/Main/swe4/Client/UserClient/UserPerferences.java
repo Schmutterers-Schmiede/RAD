@@ -1,6 +1,6 @@
-package swe4.Client.adminClient;
+package swe4.Client.UserClient;
 
-public class AdminPreferences {
+public class UserPerferences {
   private static final boolean usingServer;
 
   static {

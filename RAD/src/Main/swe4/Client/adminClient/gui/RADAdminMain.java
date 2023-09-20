@@ -2,54 +2,86 @@ package swe4.Client.adminClient.gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import java.util.Locale;
 
 
-public class RADAdminMain extends Application{
+public class RADAdminMain extends Application {
 
 
 
   @Override
-  public void start(Stage primaryStage) throws Exception{
+  public void start(Stage primaryStage) throws Exception {
+    double buttonWidth = 200;
+    double buttonHeight = 50;
+    double windowWidth = 300;
+    double windowHeight = 370;
+
     Locale.setDefault(Locale.GERMAN);
     primaryStage.setTitle("RAD Admin Main Menu");
 
-    Button userManagerButton = new Button("Benutzer");
-    userManagerButton.setId("btn_user-manager");
+    Button btOpenUserManager = new Button("Benutzer");
+    btOpenUserManager.setOnAction(event -> openUserManager(primaryStage));
+    btOpenUserManager.setPrefSize(buttonWidth, buttonHeight);
+    btOpenUserManager.setFont(new Font(15));
 
-    Button deviceManagerButton = new Button("Geräte");
-    deviceManagerButton.setId("btn_device-manager");
+    Button btOpenDeviceManager = new Button("Geräte");
+    btOpenDeviceManager.setOnAction(event -> openDeviceManager(primaryStage));
+    btOpenDeviceManager.setPrefSize(buttonWidth, buttonHeight);
+    btOpenDeviceManager.setFont(new Font(15));
 
-    Button reservationManagerButton = new Button("Reservierungen");
-    reservationManagerButton.setId("btn_reservation-manager");
+    Button btOpenReservationManager = new Button("Reservierungen");
+    btOpenReservationManager.setOnAction(event -> openReservationManager(primaryStage));
+    btOpenReservationManager.setPrefSize(buttonWidth, buttonHeight);
+    btOpenReservationManager.setFont(new Font(15));
 
-    userManagerButton.setOnAction(event -> openUserManager(primaryStage));
-    deviceManagerButton.setOnAction(event -> openDeviceManager());
-    reservationManagerButton.setOnAction(event -> openReservationManager());
+    Button btExit = new Button("Beenden");
+    btExit.setOnAction(event -> primaryStage.close());
+    btExit.setPrefSize(buttonWidth, buttonHeight);
+    btExit.setFont(new Font(15));
 
-    VBox vBox = new VBox(10);
-    vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(userManagerButton, deviceManagerButton, reservationManagerButton);
+    Label header = new Label("RAD");
+    header.setFont(new Font(30));
+    Label subHeader = new Label("Admin Client");
+    VBox headerPane = new VBox(header, subHeader);
+    headerPane.setAlignment(Pos.CENTER);
+    headerPane.requestFocus();
 
-    Scene scene = new Scene(vBox, 300, 200);
+    VBox buttonPane = new VBox(10);
+    buttonPane.setAlignment(Pos.CENTER);
+    buttonPane.getChildren().addAll(btOpenUserManager, btOpenDeviceManager, btOpenReservationManager, btExit);
+
+
+    VBox rootPane = new VBox(20);
+    rootPane.setPadding(new Insets(15, 0, 0, 0));
+    rootPane.getChildren().addAll(headerPane, buttonPane);
+
+    Scene scene = new Scene(rootPane, windowWidth, windowHeight);
     primaryStage.setScene(scene);
+
 
     Platform.runLater(primaryStage::show);
   }
 
   //======== BUTTON ACTIONS ==========
-  private void openUserManager(Stage primaryStage){
+  private void openUserManager(Stage primaryStage) {
     UserManager userManager = new UserManager(primaryStage);
     Platform.runLater(userManager::show);
   }
 
-  private void openDeviceManager(){}
+  private void openDeviceManager(Stage primaryStage) {
+    DeviceManager deviceManager = new DeviceManager(primaryStage);
+    Platform.runLater(deviceManager::show);
+  }
 
-  private void openReservationManager(){}
+  private void openReservationManager(Stage primaryStage) {
+    ReservationManager reservationManager = new ReservationManager(primaryStage);
+    Platform.runLater(reservationManager::show);
+  }
 }

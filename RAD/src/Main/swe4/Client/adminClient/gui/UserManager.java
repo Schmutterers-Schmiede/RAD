@@ -1,34 +1,40 @@
 package swe4.Client.adminClient.gui;
-import javafx.geometry.Insets;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import swe4.Client.adminClient.RepositoryFactory;
+import swe4.Client.adminClient.AdminPreferences;
+import swe4.Client.RepositoryFactory;
 import swe4.Client.sharedUI.ConfirmationPrompt;
 import swe4.Client.sharedUI.ErrorPrompt;
+import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.User;
 import swe4.Client.interfaces.Repository;
 
 
 public class UserManager {
 
-  private final Stage userManagerStage = new Stage();
+  private final Stage stage = new Stage();
   private final TableView<User> tbv;
   private final Repository repository;
   private final int windowWidth = 600;
   private final int windowHeight = 700;
-  private final double tbvWidth = windowWidth ;
-  private final double tbvHeight = windowHeight - 100;
-  public UserManager(Window owner){
+
+
+  public UserManager(Window owner) {
+    double tbvWidth = windowWidth;
+    double tbvHeight = windowHeight - 50;
+
     tbv = new TableView<>();
     tbv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     tbv.setPrefSize(tbvWidth, tbvHeight);
@@ -44,78 +50,77 @@ public class UserManager {
 
     tbv.getColumns().addAll(nameCol, usernameCol, passwordCol, typeCol);
 
-    Button btnAddUser = new Button("Hinzufügen");
-    btnAddUser.setId("btn_add-user");
-    btnAddUser.setOnAction(event -> addUser());
+    Button btAddUser = new Button("Hinzufügen");
+    btAddUser.setId("btn_add-user");
+    btAddUser.setOnAction(event -> addUser());
+    btAddUser.setPrefWidth(UIDimensions.buttonWidthShort());
 
-    Button btnEditUser = new Button("Bearbeiten");
-    btnEditUser.setId("btn_edit-user");
-    btnEditUser.setOnAction(event -> editUser(tbv.getSelectionModel().getSelectedItem()));
+    Button btEditUser = new Button("Bearbeiten");
+    btEditUser.setId("btn_edit-user");
+    btEditUser.setOnAction(event -> editUser(tbv.getSelectionModel().getSelectedItem()));
+    btEditUser.setPrefWidth(UIDimensions.buttonWidthShort());
 
-    Button btnDeleteUser = new Button( "Löschen");
-    btnDeleteUser.setId("btn_delete-user");
-    btnDeleteUser.setOnAction(event -> deleteUser(tbv.getSelectionModel().getSelectedItem().getUsername()));
+    Button btDeleteUser = new Button("Löschen");
+    btDeleteUser.setId("btn_delete-user");
+    btDeleteUser.setOnAction(event -> deleteUser(tbv.getSelectionModel().getSelectedItem().getUsername()));
+    btDeleteUser.setPrefWidth(UIDimensions.buttonWidthShort());
 
-    Button btnBack = new Button("Zurück");
-    btnBack.setId("btn_back");
-    btnBack.setOnAction(event -> userManagerStage.hide());
+    Button btBack = new Button("Zurück");
+    btBack.setId("btn_back");
+    btBack.setOnAction(event -> stage.hide());
+    btBack.setPrefWidth(UIDimensions.buttonWidthShort());
 
     VBox tablePane = new VBox(tbv);
     tablePane.setPrefSize(tbvWidth, tbvHeight);
 
     HBox tableContainer = new HBox(tablePane);
     tableContainer.setAlignment(Pos.CENTER);
-    tableContainer.setPadding(new Insets (8,8,0,8));
 
-    GridPane buttonPane = new GridPane();
-    buttonPane.setPadding(new Insets(8,8,0,8));
-    buttonPane.setVgap(20);
-    buttonPane.setHgap(8);
-    buttonPane.add(btnAddUser,0,0);
-    buttonPane.add(btnEditUser,1,0);
-    buttonPane.add(btnDeleteUser,2,0);
-    buttonPane.add(btnBack, 0,1);
+    HBox buttonPane = new HBox(UIDimensions.buttonSpacing());
+    buttonPane.getChildren().addAll(btAddUser, btEditUser, btDeleteUser, UIDimensions.createSpacer(), btBack);
 
-    VBox rootPane = new VBox();
+    VBox rootPane = new VBox(UIDimensions.containerSpacing());
     rootPane.getChildren().addAll(tableContainer, buttonPane);
+    rootPane.setPadding(UIDimensions.windowPadding());
+
     Scene userManagerScene = new Scene(rootPane, windowWidth, windowHeight);
 
-    userManagerStage.setScene(userManagerScene);
-    userManagerStage.setTitle("RAD Admin User Manager");
-    userManagerStage.initModality(Modality.WINDOW_MODAL);
-    userManagerStage.initOwner(owner);
-    userManagerStage.setResizable(false);
+    stage.setScene(userManagerScene);
+    stage.setTitle("RAD Admin User Manager");
+    stage.initModality(Modality.WINDOW_MODAL);
+    stage.initOwner(owner);
+    stage.setResizable(false);
 
-    repository = RepositoryFactory.getRepository();
+    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
   }
+
   public void show() {
-    tbv.setItems(repository.getAllUsers());
-    userManagerStage.show();
+    ObservableList<User> users = FXCollections.observableArrayList(repository.getAllUsers());
+    tbv.setItems(users);
+    stage.show();
   }
 
-  private void addUser(){
-    AddUserDialogue addUserDialogue = new AddUserDialogue(userManagerStage);
+  private void addUser() {
+    AddUserDialogue addUserDialogue = new AddUserDialogue(stage);
     addUserDialogue.show();
     tbv.refresh();
     System.out.println("add refresh");
   }
 
-  private void deleteUser(String username){
-    if(new ConfirmationPrompt().show("Sind Sie sicher, dass sie diesen Benutzer löschen wollen?")){
+  private void deleteUser(String username) {
+    if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diesen Benutzer löschen wollen?")) {
       repository.deleteUser(username);
       tbv.refresh();
     }
   }
 
-  private void editUser(User user){
-    if(user == null) {
+  private void editUser(User user) {
+    if (user == null) {
       ErrorPrompt.show("Es ist kein Benutzer ausgewählt.");
-    }
-    else {
-      EditUserDialogue editUserDialogue = new EditUserDialogue(userManagerStage, user);
+    } else {
+      EditUserDialogue editUserDialogue = new EditUserDialogue(stage, user);
       editUserDialogue.show();
       tbv.refresh();
-      System.out.println("edit refresh");
     }
   }
 }
