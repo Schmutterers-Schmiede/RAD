@@ -29,6 +29,7 @@ public class UserManager {
   private final Repository repository;
   private final int windowWidth = 600;
   private final int windowHeight = 700;
+  private ObservableList<User> users;
 
 
   public UserManager(Window owner) {
@@ -95,7 +96,7 @@ public class UserManager {
   }
 
   public void show() {
-    ObservableList<User> users = FXCollections.observableArrayList(repository.getAllUsers());
+    users = FXCollections.observableArrayList(repository.getAllUsers());
     tbv.setItems(users);
     stage.show();
   }
@@ -109,7 +110,8 @@ public class UserManager {
 
   private void deleteUser(String username) {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diesen Benutzer löschen wollen?")) {
-      repository.deleteUser(username);
+      users.removeIf(user -> user.getUsername().equals(username));//delete from UI
+      repository.deleteUser(username); //delete from database
       tbv.refresh();
     }
   }
