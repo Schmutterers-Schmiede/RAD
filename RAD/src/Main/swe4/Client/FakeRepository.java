@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 public class FakeRepository implements Repository {
-  private User[] users;
-  private Device[] devices;
-  private final String[] deviceCategories;
-  private Reservation[] reservations;
+  private final List<User> users;
+  private final List<Device> devices;
+  private final List<String> deviceCategories;
+  private final List<Reservation> reservations;
   private static FakeRepository instance;
 
   public static FakeRepository getInstance() {
@@ -29,13 +29,19 @@ public class FakeRepository implements Repository {
 
   //======== DUMMY DATA ========
   private FakeRepository() {
-    users = new User[]{
-            new User("name1", "username1", "pw1", "Student"),
-            new User("name2", "username2", "pw2", "Student"),
-            new User("name3", "username3", "pw3", "Student")
-    };
+    users = new ArrayList<>();
+    devices = new ArrayList<>();
+    deviceCategories = new ArrayList<>();
+    reservations = new ArrayList<>();
 
-    Device dev = new Device("INV98765",
+    users.add(new User("name1", "username1", "pw1", "Student"));
+    users.add(new User("name2", "username2", "pw2", "Student"));
+    users.add(new User("name3", "username3", "pw3", "Student"));
+
+
+
+
+    devices.add(new Device("INV98765",
             "FHID98765",
             "Osziloskop",
             "Gucci",
@@ -47,10 +53,10 @@ public class FakeRepository implements Repository {
             new BigDecimal("9999.99"),
             "ausgegliedert",
             "ride the wave",
-            "Messgeräte");
-    dev.setDisposalDate(LocalDate.of(2020, 5, 22));
+            "Messgeräte"));
 
-    devices = new Device[] {
+
+    devices.add(
             new Device("INV12345",
                     "FHID12345",
                     "Laptop",
@@ -64,7 +70,8 @@ public class FakeRepository implements Repository {
                     "verfügbar",
                     "good stuff",
                     "Computer"
-            ),
+            ));
+    devices.add(
             new Device("INV78456",
                     "FHID78456",
                     "Spülmittelanalysator",
@@ -78,8 +85,8 @@ public class FakeRepository implements Repository {
                     "verfügbar",
                     "hat uns ein Verrückter auf einem Nilpferd verkauft",
                     "Messgeräte"
-            ),
-            new Device("INV99999",
+            ));
+            Device dev = new Device("INV99999",
                     "FHID99999",
                     "Alkomat",
                     "Air & Spirit",
@@ -92,64 +99,62 @@ public class FakeRepository implements Repository {
                     "überfällig",
                     "Die beliebteste Attraktion im FH Pub",
                     "Messgeräte"
-            ),
-            dev
-    };
+            );
+            dev.setDisposalDate(LocalDate.of(2020, 5, 22));
+            devices.add(dev);
 
-    deviceCategories = new String[]{
-            "Laptops", "Messgeräte"
-    };
 
-    reservations = new Reservation[]{
-            new Reservation(
-                    1,
-                    "username1",
-                    "name1",
-                    "INV78456",
-                    "FHID78456",
-                    "Bernhard Trug GmbH",
-                    "Spülisator 9001",
-                    LocalDate.of(2023, 10, 31),
-                    LocalDate.of(2023, 11, 10),
-                    "reserviert"
-            ),
-            new Reservation(
-                    2,
-                    "username2",
-                    "name2",
-                    "INV78456",
-                    "FHID78456",
-                    "Bernhard Trug GmbH",
-                    "Spülisator 9001",
-                    LocalDate.of(2023, 12, 1),
-                    LocalDate.of(2023, 12, 10),
-                    "reserviert"
-            ),
-            new Reservation(
-                    3,
-                    "username3",
-                    "name3",
-                    "INV12345",
-                    "FHID12345",
-                    "hp",
-                    "hp zbook",
-                    LocalDate.of(2023, 10, 20),
-                    LocalDate.of(2023, 11, 10),
-                    "reserviert"
-            ),
-            new Reservation(
-                    4,
-                    "username3",
-                    "name3",
-                    "INV99999",
-                    "FHID99999",
-                    "Blow2Go",
-                    "Air & Spirit",
-                    LocalDate.of(2023, 9, 1),
-                    LocalDate.of(2023, 9, 2),
-                    "überfällig"
-            )
-    };
+    deviceCategories.add("Laptops");
+    deviceCategories.add("Messgeräte");
+
+    reservations.add(new Reservation(
+            1,
+            "username1",
+            "name1",
+            "INV78456",
+            "FHID78456",
+            "Bernhard Trug GmbH",
+            "Spülisator 9001",
+            LocalDate.of(2023, 10, 31),
+            LocalDate.of(2023, 11, 10),
+            "reserviert"
+    ));
+    reservations.add(new Reservation(
+            2,
+            "username2",
+            "name2",
+            "INV78456",
+            "FHID78456",
+            "Bernhard Trug GmbH",
+            "Spülisator 9001",
+            LocalDate.of(2023, 12, 1),
+            LocalDate.of(2023, 12, 10),
+            "reserviert"
+    ));
+    reservations.add(new Reservation(
+            3,
+            "username3",
+            "name3",
+            "INV12345",
+            "FHID12345",
+            "hp",
+            "hp zbook",
+            LocalDate.of(2023, 10, 20),
+            LocalDate.of(2023, 11, 10),
+            "reserviert"
+    ));
+    reservations.add(new Reservation(
+            4,
+            "username3",
+            "name3",
+            "INV99999",
+            "FHID99999",
+            "Blow2Go",
+            "Air & Spirit",
+            LocalDate.of(2023, 9, 1),
+            LocalDate.of(2023, 9, 2),
+            "überfällig"
+    ));
 
   }
 
@@ -162,7 +167,7 @@ public class FakeRepository implements Repository {
 
   //======== USERS ==========
 
-  public User[] getAllUsers() {
+  public List<User> getAllUsers() {
     return users;
   }
 

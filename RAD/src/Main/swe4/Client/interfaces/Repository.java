@@ -12,7 +12,7 @@ import java.util.List;
 public interface Repository extends Remote {
 
   // USERS ==========================================================================
-  User[] getAllUsers();
+  List<User> getAllUsers();
 
   User getUserByUsername(String username);
 
@@ -25,16 +25,16 @@ public interface Repository extends Remote {
   boolean authenticateUser(String username, String password);
 
   // DEVICES =========================================================================
-  Device[] getAllDevicesAdmin();
+  List<Device> getAllDevicesAdmin();
 
-  Device[] searchDevicesByInventoryId(String invNr);
-  Device[] searchDevicesByName(String name);
-  Device[] searchDevicesByBrand(String brand);
-  Device[] searchDevicesByModel(String model);
-  Device[] searchDevicesByCategory(String category);
+  List<Device> searchDevicesByInventoryId(String invNr);
+  List<Device> searchDevicesByName(String name);
+  List<Device> searchDevicesByBrand(String brand);
+  List<Device> searchDevicesByModel(String model);
+  List<Device> searchDevicesByCategory(String category);
 
 
-  Device[] getAllDevicesUser();
+  List<Device> getAllDevicesUser();
 
   boolean addDevice(String inventoryId,
                     String inventoryCode,
@@ -52,7 +52,7 @@ public interface Repository extends Remote {
 
   void deleteDevice(String inventoryId);
 
-  String[] getDeviceCategories();
+  List<String> getDeviceCategories();
 
   boolean updateDevice(String inventoryIdBeforeUpdate,
                        String inventoryCodeBeforeUpdate,
@@ -72,13 +72,13 @@ public interface Repository extends Remote {
 
 
   // RESERVATIONS ========================================================================
-  Reservation[] getAllReservations();
+  List<Reservation> getAllReservations();
 
   void deleteReservation(int reservationId);
 
   boolean updateReservation(int reservationId, LocalDate startDate, LocalDate endDate);
 
-  Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate);
+  List<Reservation> getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate);
 
   boolean reservationsOverlap(String invId, LocalDate startDate, LocalDate endDate);
 
@@ -91,8 +91,8 @@ public interface Repository extends Remote {
                       LocalDate endDate,
                       String status);
 
-  Reservation[] searchReservationsByInvId(String invId);
-  Reservation[] searchReservationsByStatus(String status);
-  Reservation[] searchReservationsByName(String name);
+  List<Reservation> searchReservationsByInvId(String invId);
+  List<Reservation> searchReservationsByStatus(String status);
+  List<Reservation> searchReservationsByName(String name);
 }
 
