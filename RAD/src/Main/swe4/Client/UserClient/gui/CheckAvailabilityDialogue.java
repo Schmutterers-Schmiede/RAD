@@ -94,8 +94,8 @@ public class CheckAvailabilityDialogue {
       return;
     }
 
-    List<Reservation> conflicts = repository.getReservationConflicts(invId, startDate, endDate);
-    if (conflicts.isEmpty()) {
+    Reservation[] conflicts = repository.getReservationConflicts(invId, startDate, endDate);
+    if (conflicts.length == 0) {
       SuccessPrompt.show("Das Gerät ist in ihrem gewünschten Zeitraum verfügbar");
     } else {
       ObservableList<Reservation> conflictsOL = FXCollections.observableArrayList(conflicts);

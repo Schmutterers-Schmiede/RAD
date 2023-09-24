@@ -7,16 +7,19 @@ import swe4.entities.User;
 import swe4.Client.interfaces.Repository;
 
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 public class FakeRepository implements Repository {
-  private final List<User> users;
-  private final List<Device> devices;
-  private final List<String> deviceCategories;
-  private final List<Reservation> reservations;
+  private User[] users;
+  private Device[] devices;
+  private final String[] deviceCategories;
+  private Reservation[] reservations;
   private static FakeRepository instance;
 
   public static FakeRepository getInstance() {
@@ -26,29 +29,12 @@ public class FakeRepository implements Repository {
 
   //======== DUMMY DATA ========
   private FakeRepository() {
-    users = new ArrayList<>();
-    devices = new ArrayList<>();
-    reservations = new ArrayList<>();
-    deviceCategories = new ArrayList<>();
+    users = new User[]{
+            new User("name1", "username1", "pw1", "Student"),
+            new User("name2", "username2", "pw2", "Student"),
+            new User("name3", "username3", "pw3", "Student")
+    };
 
-    users.add(new User("name1", "username1", "pw1", "Student"));
-    users.add(new User("name2", "username2", "pw2", "Student"));
-    users.add(new User("name3", "username3", "pw3", "Student"));
-
-    devices.add(new Device("INV12345",
-            "FHID12345",
-            "Laptop",
-            "hp",
-            "hp zbook",
-            "4895725245",
-            "FH2.224",
-            LocalDate.of(2020, 5, 14),
-            LocalDate.of(2020, 5, 21),
-            new BigDecimal("1599.99"),
-            "verfügbar",
-            "good stuff",
-            "Computer"
-    ));
     Device dev = new Device("INV98765",
             "FHID98765",
             "Osziloskop",
@@ -63,92 +49,107 @@ public class FakeRepository implements Repository {
             "ride the wave",
             "Messgeräte");
     dev.setDisposalDate(LocalDate.of(2020, 5, 22));
-    devices.add(dev);
 
-    devices.add(new Device("INV78456",
-            "FHID78456",
-            "Spülmittelanalysator",
-            "Bernhard Trug GmbH",
-            "Spülisator 9001",
-            "9876549654",
-            "FH4.000",
-            LocalDate.of(2020, 5, 14),
-            LocalDate.of(2020, 5, 21),
-            new BigDecimal("2200"),
-            "verfügbar",
-            "hat uns ein Verrückter auf einem Nilpferd verkauft",
-            "Messgeräte"
-    ));
+    devices = new Device[] {
+            new Device("INV12345",
+                    "FHID12345",
+                    "Laptop",
+                    "hp",
+                    "hp zbook",
+                    "4895725245",
+                    "FH2.224",
+                    LocalDate.of(2020, 5, 14),
+                    LocalDate.of(2020, 5, 21),
+                    new BigDecimal("1599.99"),
+                    "verfügbar",
+                    "good stuff",
+                    "Computer"
+            ),
+            new Device("INV78456",
+                    "FHID78456",
+                    "Spülmittelanalysator",
+                    "Bernhard Trug GmbH",
+                    "Spülisator 9001",
+                    "9876549654",
+                    "FH4.000",
+                    LocalDate.of(2020, 5, 14),
+                    LocalDate.of(2020, 5, 21),
+                    new BigDecimal("2200"),
+                    "verfügbar",
+                    "hat uns ein Verrückter auf einem Nilpferd verkauft",
+                    "Messgeräte"
+            ),
+            new Device("INV99999",
+                    "FHID99999",
+                    "Alkomat",
+                    "Air & Spirit",
+                    "Blow2Go",
+                    "987654321",
+                    "FH3.420",
+                    LocalDate.of(2020, 5, 14),
+                    LocalDate.of(2020, 5, 21),
+                    new BigDecimal("50"),
+                    "überfällig",
+                    "Die beliebteste Attraktion im FH Pub",
+                    "Messgeräte"
+            ),
+            dev
+    };
 
-    devices.add(new Device("INV99999",
-            "FHID99999",
-            "Alkomat",
-            "Air & Spirit",
-            "Blow2Go",
-            "987654321",
-            "FH3.420",
-            LocalDate.of(2020, 5, 14),
-            LocalDate.of(2020, 5, 21),
-            new BigDecimal("50"),
-            "überfällig",
-            "Die beliebteste Attraktion im FH Pub",
-            "Messgeräte"
-    ));
+    deviceCategories = new String[]{
+            "Laptops", "Messgeräte"
+    };
 
-    deviceCategories.add("Laptops");
-    deviceCategories.add("Messgeräte");
-
-    reservations.add(new Reservation(
-            1,
-            "username1",
-            "name1",
-            "INV78456",
-            "FHID78456",
-            "Bernhard Trug GmbH",
-            "Spülisator 9001",
-            LocalDate.of(2023, 10, 31),
-            LocalDate.of(2023, 11, 10),
-            "reserviert"
-    ));
-
-    reservations.add(new Reservation(
-            2,
-            "username2",
-            "name2",
-            "INV78456",
-            "FHID78456",
-            "Bernhard Trug GmbH",
-            "Spülisator 9001",
-            LocalDate.of(2023, 12, 1),
-            LocalDate.of(2023, 12, 10),
-            "reserviert"
-    ));
-
-    reservations.add(new Reservation(
-            3,
-            "username3",
-            "name3",
-            "INV12345",
-            "FHID12345",
-            "hp",
-            "hp zbook",
-            LocalDate.of(2023, 10, 20),
-            LocalDate.of(2023, 11, 10),
-            "reserviert"
-    ));
-
-    reservations.add(new Reservation(
-            4,
-            "username3",
-            "name3",
-            "INV99999",
-            "FHID99999",
-            "Blow2Go",
-            "Air & Spirit",
-            LocalDate.of(2023, 9, 1),
-            LocalDate.of(2023, 9, 2),
-            "überfällig"
-    ));
+    reservations = new Reservation[]{
+            new Reservation(
+                    1,
+                    "username1",
+                    "name1",
+                    "INV78456",
+                    "FHID78456",
+                    "Bernhard Trug GmbH",
+                    "Spülisator 9001",
+                    LocalDate.of(2023, 10, 31),
+                    LocalDate.of(2023, 11, 10),
+                    "reserviert"
+            ),
+            new Reservation(
+                    2,
+                    "username2",
+                    "name2",
+                    "INV78456",
+                    "FHID78456",
+                    "Bernhard Trug GmbH",
+                    "Spülisator 9001",
+                    LocalDate.of(2023, 12, 1),
+                    LocalDate.of(2023, 12, 10),
+                    "reserviert"
+            ),
+            new Reservation(
+                    3,
+                    "username3",
+                    "name3",
+                    "INV12345",
+                    "FHID12345",
+                    "hp",
+                    "hp zbook",
+                    LocalDate.of(2023, 10, 20),
+                    LocalDate.of(2023, 11, 10),
+                    "reserviert"
+            ),
+            new Reservation(
+                    4,
+                    "username3",
+                    "name3",
+                    "INV99999",
+                    "FHID99999",
+                    "Blow2Go",
+                    "Air & Spirit",
+                    LocalDate.of(2023, 9, 1),
+                    LocalDate.of(2023, 9, 2),
+                    "überfällig"
+            )
+    };
 
   }
 
@@ -161,7 +162,7 @@ public class FakeRepository implements Repository {
 
   //======== USERS ==========
 
-  public List<User> getAllUsers() {
+  public User[] getAllUsers() {
     return users;
   }
 
@@ -177,39 +178,43 @@ public class FakeRepository implements Repository {
   @Override
   public boolean addUser(String name, String username, String password, String type) {
     User newUser = new User(name, username, password, type);
-    if (users.stream().anyMatch(user -> user.getUsername().equals(newUser.getUsername())))
-      return false;
-
-    users.add(newUser);
+    for(User user : users){
+      if(user.getUsername().equals(newUser.getUsername()))
+        return false;
+    }
+    users = addToArray(users, newUser);
     return true;
   }
 
   @Override
   public boolean updateUser(String usernameBeforeUpdate, String name, String username, String password, String type) {
-    if (!username.equals(usernameBeforeUpdate) &&
-            users.stream().anyMatch(user -> user.getUsername().equals(username)))
-      return false;
-
-    User userToUpdate = users.stream()
-            .filter(user -> user.getUsername().equals(usernameBeforeUpdate))
-            .findFirst()
-            .orElse(null);
+    if (!username.equals(usernameBeforeUpdate)){
+      for(User user : users){
+        if(user.getUsername().equals(username))
+          return false;
+      }
+    }
+    User userToUpdate = null;
+    for(User user : users){
+      if(user.getUsername().equals(usernameBeforeUpdate)){
+        userToUpdate = user;
+        break;
+      }
+    }
     if (userToUpdate != null) {
       userToUpdate.setName(name);
       userToUpdate.setUsername(username);
       userToUpdate.setPassword(password);
       userToUpdate.setType(type);
+      return true;
     }
-    return true;
+    else return false;
   }
 
   @Override
   public void deleteUser(String username) {
-    User userToDelete = users.stream()
-            .filter(user -> user.getUsername().equals(username))
-            .findFirst().orElse(null);
-    if (userToDelete != null)
-      users.remove(userToDelete);
+    BiPredicate<User, String> compareUsername = (u, uname) -> u.getUsername().equals(uname);
+    users = deleteFromArray(users, username, compareUsername, User.class);
   }
 
   @Override
@@ -224,69 +229,69 @@ public class FakeRepository implements Repository {
   //=========== DEVICES =============
 
   @Override
-  public List<Device> getAllDevicesAdmin() {
+  public Device[] getAllDevicesAdmin() {
     return devices;
   }
 
   @Override
-  public List<Device> searchDevicesByInventoryId(String invId) {
+  public Device[] searchDevicesByInventoryId(String invId) {
     List<Device> results = new ArrayList<>();
     for(Device device : devices){
       if(device.getInventoryId().equals(invId))
         results.add(device);
     }
-    return results;
+    return (Device[]) results.toArray();
   }
 
   @Override
-  public List<Device> searchDevicesByName(String name) {
+  public Device[] searchDevicesByName(String name) {
     List<Device> results = new ArrayList<>();
     for(Device device : devices){
       if(device.getName().equals(name))
         results.add(device);
     }
-    return results;
+    return (Device[]) results.toArray();
   }
 
   @Override
-  public List<Device> searchDevicesByBrand(String brand) {
+  public Device[] searchDevicesByBrand(String brand) {
     List<Device> results = new ArrayList<>();
     for(Device device : devices){
       if(device.getBrand().equals(brand))
         results.add(device);
     }
-    return results;
+    return (Device[]) results.toArray();
   }
 
   @Override
-  public List<Device> searchDevicesByModel(String model) {
+  public Device[] searchDevicesByModel(String model) {
     List<Device> results = new ArrayList<>();
     for(Device device : devices){
       if(device.getModel().equals(model))
         results.add(device);
     }
-    return results;
+    return (Device[]) results.toArray();
   }
 
   @Override
-  public List<Device> searchDevicesByCategory(String category) {
+  public Device[] searchDevicesByCategory(String category) {
     List<Device> results = new ArrayList<>();
     for(Device device : devices){
       if(device.getCategory().equals(category))
         results.add(device);
     }
-    return results;
+    return (Device[]) results.toArray();
   }
 
 
   @Override
-  public List<Device> getAllDevicesUser() {
+  public Device[] getAllDevicesUser() {
     List<Device> filteredDevices = new ArrayList<>();
     for (Device item : devices) {
       if (!item.getStatus().equals("ausgegliedert"))
         filteredDevices.add(item);
     }
-    return filteredDevices;
+    return (Device[]) filteredDevices.toArray();
   }
 
   @Override
@@ -303,40 +308,35 @@ public class FakeRepository implements Repository {
                            String status,
                            String comments,
                            String category) {
-    if (devices.stream().anyMatch(device -> device.getInventoryId().equals(inventoryId))) {
-      return false;
-    } else {
-      devices.add(new Device(
-              inventoryId,
-              inventoryCode,
-              name,
-              brand,
-              model,
-              serialNr,
-              roomNr,
-              buyDate,
-              logDate,
-              price,
-              status,
-              comments,
-              category));
+    for(Device device : devices){
+      if(device.getInventoryId().equals(inventoryId)) return false;
     }
+    addToArray(devices, new Device(
+            inventoryId,
+            inventoryCode,
+            name,
+            brand,
+            model,
+            serialNr,
+            roomNr,
+            buyDate,
+            logDate,
+            price,
+            status,
+            comments,
+            category));
     return true;
   }
 
   @Override
   public void deleteDevice(String inventoryId) {
-    Device deviceToDelete = devices.stream()
-            .filter(device -> device.getInventoryId().equals(inventoryId))
-            .findFirst()
-            .orElse(null);
-    if (deviceToDelete != null)
-      devices.remove(deviceToDelete);
+    BiPredicate<Device, String> compareInventoryId = (device, invId) -> device.getInventoryId().equals(inventoryId);
+    deleteFromArray(devices, inventoryId, compareInventoryId, Device.class);
   }
 
 
   @Override
-  public List<String> getDeviceCategories() {
+  public String[] getDeviceCategories() {
     return deviceCategories;
   }
 
@@ -357,19 +357,16 @@ public class FakeRepository implements Repository {
                               String comments,
                               String category) {
 
-    if (!inventoryId.equals(inventoryIdBeforeUpdate) &&
-            devices.stream().anyMatch(device -> device.getInventoryId().equals(inventoryId)))
-      return false;
+    if (!inventoryId.equals(inventoryIdBeforeUpdate)) {
+      for(Device device : devices){
+        if(device.getInventoryId().equals(inventoryId) || device.getInventoryCode().equals(inventoryCode)) return false;
+      }
+    }
 
-    if (!inventoryCode.equals(inventoryCodeBeforeUpdate) &&
-            devices.stream().anyMatch(device -> device.getInventoryId().equals(inventoryId)))
-      return false;
-
-    Device deviceToUpdate = devices
-            .stream()
-            .filter(device -> device.getInventoryId().equals(inventoryId))
-            .findFirst()
-            .orElse(null);
+    Device deviceToUpdate = null;
+    for(Device device : devices){
+      if(device.getInventoryId().equals(inventoryIdBeforeUpdate)) deviceToUpdate = device;
+    }
 
     if (deviceToUpdate != null) {
       deviceToUpdate.setInventoryId(inventoryId);
@@ -385,44 +382,42 @@ public class FakeRepository implements Repository {
       deviceToUpdate.setStatus(status);
       deviceToUpdate.setComments(comments);
       deviceToUpdate.setCategory(category);
+      return true;
     }
-    return true;
+    else return false;
   }
 
   @Override
-  public List<Reservation> getAllReservations() {
+  public Reservation[] getAllReservations() {
     return reservations;
   }
 
   @Override
   public void deleteReservation(int reservationId) {
-    Reservation reservationToDelete = reservations
-            .stream()
-            .filter(reservation -> reservation.getReservationId() == reservationId)
-            .findFirst()
-            .orElse(null);
-    if (reservationToDelete != null)
-      reservations.remove(reservationToDelete);
+    BiPredicate<Reservation, Integer> compareReservationId = (res, id) -> res.getReservationId() == id;
+    deleteFromArray(reservations, reservationId, compareReservationId, Reservation.class);
   }
 
   @Override
   public boolean updateReservation(int reservationId, LocalDate startDate, LocalDate endDate) {
-    if (reservations.stream().anyMatch(reservation ->
-            DateChecker.timeSpanOverlap(reservation.getStartDate(), reservation.getEndDate(), startDate, endDate)))
-      return false; //overlap with other reservation
 
-    Reservation reservationToUpdate = reservations
-            .stream()
-            .filter(reservation -> reservation.getReservationId() == reservationId)
-            .findFirst()
-            .orElse(null);
+    if(hasConflicts(startDate, endDate)) return false;//conflict with other reservation
+
+    Reservation reservationToUpdate = null;
+    for(Reservation res : reservations){
+      if(res.getReservationId() == reservationId){
+        reservationToUpdate = res;
+        break;
+      }
+    }
+    //no need to check for null since the reservation must exist for this method to be called
     reservationToUpdate.setStartDate(startDate);
     reservationToUpdate.setEndDate(endDate);
     return true;
   }
 
   @Override
-  public List<Reservation> getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) {
+  public Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) {
     List<Reservation> conflicts = new ArrayList<>();
     for (Reservation item : reservations) {
       if (DateChecker.timeSpanOverlap(
@@ -433,7 +428,7 @@ public class FakeRepository implements Repository {
               item.getInvId().equals(invId))
         conflicts.add(item);
     }
-    return conflicts;
+    return (Reservation[]) conflicts.toArray();
   }
 
   @Override
@@ -456,7 +451,7 @@ public class FakeRepository implements Repository {
           LocalDate endDate,
           String status) {
     User user = getUserByUsername(username);
-    reservations.add(new Reservation(
+    Reservation newRes = new Reservation(
             nextReservationId(),
             username,
             user.getName(),
@@ -466,38 +461,57 @@ public class FakeRepository implements Repository {
             model,
             startDate,
             endDate,
-            status));
+            status);
+    addToArray(reservations, newRes);
   }
 
   @Override
-  public List<Reservation> searchReservationsByInvId(String invId) {
+  public Reservation[] searchReservationsByInvId(String invId) {
     List<Reservation> result = new ArrayList<>();
     for(Reservation reservation : reservations){
       if(reservation.getInvId().equals(invId))
         result.add(reservation);
     }
-    return result;
+    return (Reservation[]) result.toArray();
   }
 
   @Override
-  public List<Reservation> searchReservationsByStatus(String status) {
+  public Reservation[] searchReservationsByStatus(String status) {
     List<Reservation> result = new ArrayList<>();
     for(Reservation reservation : reservations){
       if(reservation.getStatus().equals(status))
         result.add(reservation);
     }
-    return result;
+    return (Reservation[]) result.toArray();
   }
 
   @Override
-  public List<Reservation> searchReservationsByName(String name) {
+  public Reservation[] searchReservationsByName(String name) {
     List<Reservation> result = new ArrayList<>();
     for(Reservation reservation : reservations){
       if(reservation.getRentedByName().equals(name))
         result.add(reservation);
     }
-    return result;
+    return (Reservation[]) result.toArray();
   }
 
+  private <T> T[] addToArray(T[] oldArray, T newItem){
+    T[] newArray = (T[]) new Object[oldArray.length + 1];
+    newArray[oldArray.length] = newItem;
+    return newArray;
+  }
 
+  private <T, U> T[] deleteFromArray(T[] oldArray, U itemId, BiPredicate<T, U> predicate, Class<T> type) {
+    return Arrays.stream(oldArray)
+            .filter(item -> !predicate.test(item, itemId))
+            .toArray(newSize -> (T[]) Array.newInstance(type, newSize));
+  }
+
+  private boolean hasConflicts(LocalDate startDate, LocalDate endDate){
+    for(Reservation res : reservations){
+      if(DateChecker.timeSpanOverlap(startDate, endDate, res.getStartDate(), res.getEndDate()))
+        return false;
+    }
+    return true;
+  }
 }
