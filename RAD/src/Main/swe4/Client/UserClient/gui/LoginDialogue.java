@@ -1,10 +1,8 @@
 package swe4.Client.UserClient.gui;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -12,17 +10,16 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.adminClient.AdminPreferences;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Device;
-import swe4.entities.Reservation;
 
 import java.time.LocalDate;
 
 public class LoginDialogue {
   private final Stage stage = new Stage();
-  private final Repository repository;
+  private final IRepository repository;
   private final double windowWidth = 250;
   private final double windowHeight = 150;
   private final TextField tfUsername;

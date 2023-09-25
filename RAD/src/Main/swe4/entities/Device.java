@@ -1,9 +1,10 @@
 package swe4.entities;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Device {
+public class Device implements Serializable {
   private String inventoryId,
           inventoryCode,
           name,

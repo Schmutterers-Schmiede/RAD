@@ -1,21 +1,48 @@
 package swe4.Client;
 
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
+import swe4.Client.interfaces.IServer;
 import swe4.entities.Device;
 import swe4.entities.Reservation;
 import swe4.entities.User;
 
 import java.math.BigDecimal;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.util.List;
 
-public class ServerRepository implements Repository {
+public class ServerRepository implements IRepository {
   private static ServerRepository instance;
+  private IServer serverProxy;
   public static ServerRepository getInstance() {
     if (instance == null) instance = new ServerRepository();
     return instance;
   }
+
+  private ServerRepository(){
+    String hostAndPort = "localhost"; //default port is 1099
+    String serviceUrl = "rmi://%s/Server".formatted(hostAndPort);
+    System.out.println("looking up %s".formatted(hostAndPort));
+
+    try{
+      serverProxy = (IServer) Naming.lookup(serviceUrl);
+
+    }catch (Exception e){
+      System.out.println("exception in serverRepository constructor");
+    }
+  }
+
   @Override
   public User[] getAllUsers() {
+    try{
+
+      return serverProxy.getAllUsers();
+    } catch (NullPointerException e){
+      System.out.println("exception in getallUsers");
+    } catch (RemoteException e) {
+      throw new RuntimeException(e);
+    }
     return null;
   }
 
@@ -115,7 +142,7 @@ public class ServerRepository implements Repository {
   }
 
   @Override
-  public Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) {
+  public List<Reservation> getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) {
     return null;
   }
 

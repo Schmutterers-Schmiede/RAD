@@ -19,14 +19,14 @@ import swe4.Client.sharedUI.ConfirmationPrompt;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.User;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 
 
 public class UserManager {
 
   private final Stage stage = new Stage();
   private final TableView<User> tbv;
-  private final Repository repository;
+  private final IRepository repository;
   private final int windowWidth = 600;
   private final int windowHeight = 700;
   private ObservableList<User> users;
@@ -104,14 +104,15 @@ public class UserManager {
   private void addUser() {
     AddUserDialogue addUserDialogue = new AddUserDialogue(stage);
     addUserDialogue.show();
+    users = FXCollections.observableArrayList(repository.getAllUsers());
     tbv.refresh();
-    System.out.println("add refresh");
   }
 
   private void deleteUser(String username) {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diesen Benutzer löschen wollen?")) {
       users.removeIf(user -> user.getUsername().equals(username));//delete from UI
       repository.deleteUser(username); //delete from database
+      users = FXCollections.observableArrayList(repository.getAllUsers());
       tbv.refresh();
     }
   }
@@ -122,6 +123,7 @@ public class UserManager {
     } else {
       EditUserDialogue editUserDialogue = new EditUserDialogue(stage, user);
       editUserDialogue.show();
+      users = FXCollections.observableArrayList(repository.getAllUsers());
       tbv.refresh();
     }
   }

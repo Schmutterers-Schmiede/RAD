@@ -1,8 +1,9 @@
 package swe4.entities;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Reservation {
+public class Reservation implements Serializable {
   private int reservationId;
   private String username;
   private String rentedByName;

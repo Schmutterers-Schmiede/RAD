@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ConfirmationPrompt;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
@@ -24,8 +24,9 @@ import swe4.entities.Reservation;
 
 public class ReservationManager {
   private final Stage stage = new Stage();
+  ObservableList<Reservation> reservations;
   private final TableView<Reservation> tbv;
-  private final Repository repository;
+  private final IRepository repository;
   private final int windowWidth = 600;
   private final int windowHeight = 700;
   private final double tbvWidth = windowWidth;
@@ -123,7 +124,7 @@ public class ReservationManager {
   }
 
   public void show() {
-    ObservableList<Reservation> reservations = FXCollections.observableArrayList(repository.getAllReservations());
+    reservations = FXCollections.observableArrayList(repository.getAllReservations());
     tbv.setItems(reservations);
     stage.show();
   }
@@ -132,6 +133,7 @@ public class ReservationManager {
   private void deleteReservation(int reservationId) {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diese Reservierung stornieren wollen?")) {
       repository.deleteReservation(reservationId);
+      reservations = FXCollections.observableArrayList(repository.getAllReservations());
       tbv.refresh();
     }
   }
@@ -142,6 +144,7 @@ public class ReservationManager {
     } else {
       EditReservationDialogue editReservationDialogue = new EditReservationDialogue(stage, reservation);
       editReservationDialogue.show();
+      reservations = FXCollections.observableArrayList(repository.getAllReservations());
       tbv.refresh();
     }
   }

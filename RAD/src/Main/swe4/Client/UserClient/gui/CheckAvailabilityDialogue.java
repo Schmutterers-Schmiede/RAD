@@ -17,7 +17,7 @@ import javafx.stage.Window;
 import swe4.Client.DateChecker;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.adminClient.AdminPreferences;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Reservation;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class CheckAvailabilityDialogue {
   private final Stage stage = new Stage();
-  private final Repository repository;
+  private final IRepository repository;
   private final DatePicker dpStartDate;
   private final DatePicker dpEndDate;
 
@@ -94,8 +94,8 @@ public class CheckAvailabilityDialogue {
       return;
     }
 
-    Reservation[] conflicts = repository.getReservationConflicts(invId, startDate, endDate);
-    if (conflicts.length == 0) {
+    List<Reservation> conflicts = repository.getReservationConflicts(invId, startDate, endDate);
+    if (conflicts.size() == 0) {
       SuccessPrompt.show("Das Gerät ist in ihrem gewünschten Zeitraum verfügbar");
     } else {
       ObservableList<Reservation> conflictsOL = FXCollections.observableArrayList(conflicts);

@@ -14,7 +14,7 @@ import javafx.stage.Window;
 import swe4.Client.DateChecker;
 import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 
@@ -38,7 +38,7 @@ public class AddDeviceDialogue {
   private final ComboBox<String> cbStatus;
   private final ComboBox<String> cbCategory;
   private final TextArea taComments;
-  private final Repository repository;
+  private final IRepository repository;
 
   public AddDeviceDialogue(Window owner) {
     double windowWidth = 400;

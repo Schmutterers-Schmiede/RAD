@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 
@@ -28,7 +28,7 @@ public class AddUserDialogue {
   private final TextField tfPassword;
   private final ComboBox<String> cbType;
 
-  private final Repository repository;
+  private final IRepository repository;
 
   public AddUserDialogue(Window owner) {
     repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());

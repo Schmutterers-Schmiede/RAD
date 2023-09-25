@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ConfirmationPrompt;
 import swe4.Client.sharedUI.DeviceDetailView;
 import swe4.Client.sharedUI.ErrorPrompt;
@@ -22,8 +22,9 @@ import swe4.entities.Device;
 
 public class DeviceManager {
   private final Stage stage = new Stage();
+  private ObservableList<Device> devices;
   private final TableView<Device> tbv;
-  private final Repository repository;
+  private final IRepository repository;
   private final int windowWidth = 600;
   private final int windowHeight = 650;
 
@@ -113,7 +114,7 @@ public class DeviceManager {
   }
 
   public void show() {
-    ObservableList<Device> devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
+    devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
     tbv.setItems(devices);
     stage.show();
   }
@@ -121,12 +122,14 @@ public class DeviceManager {
   private void addDevice() {
     AddDeviceDialogue addDeviceDialogue = new AddDeviceDialogue(stage);
     addDeviceDialogue.show();
+    devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
     tbv.refresh();
   }
 
   private void deleteDevice(String invId) {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie dieses Gerät löschen wollen?")) {
       repository.deleteDevice(invId);
+      devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
       tbv.refresh();
     }
   }
@@ -137,6 +140,7 @@ public class DeviceManager {
     } else {
       EditDeviceDialogue editDeviceDialogue = new EditDeviceDialogue(stage, device);
       editDeviceDialogue.show();
+      devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
       tbv.refresh();
     }
   }

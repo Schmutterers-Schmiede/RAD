@@ -14,7 +14,7 @@ import javafx.stage.Window;
 import swe4.Client.DateChecker;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.adminClient.AdminPreferences;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Device;
@@ -23,7 +23,7 @@ import java.time.LocalDate;
 
 public class SelectTimeSpanDialogue {
   private final Stage stage = new Stage();
-  private final Repository repository;
+  private final IRepository repository;
   private final DatePicker dpStartDate;
   private final DatePicker dpEndDate;
   private final Device device;

@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.UserClient.UserPerferences;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.DeviceDetailView;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
@@ -30,7 +30,7 @@ public class RADUserMain extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Repository repository;
+    IRepository repository;
     double tbvWidth = windowWidth;
     double tbvHeight = windowHeight - 50;
 

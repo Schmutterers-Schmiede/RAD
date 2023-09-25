@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.UserClient.UserPerferences;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Device;
 import swe4.entities.User;
@@ -25,7 +25,7 @@ import java.time.LocalDate;
 public class ReservationSummary {
 
   public void show(Window owner, Device device, String username, LocalDate startDate, LocalDate endDate) {
-    Repository repository;
+    IRepository repository;
     Stage stage = new Stage();
     double windowWidth = 280;
     double windowHeight = 500;

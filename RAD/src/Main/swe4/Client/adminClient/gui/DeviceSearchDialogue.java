@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.adminClient.AdminPreferences;
-import swe4.Client.interfaces.Repository;
+import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Device;
@@ -26,7 +26,7 @@ public class DeviceSearchDialogue {
   private final TextField tfSearchTerm;
   private final ComboBox<String> cbSearchFor;
   private ObservableList<Device> searchResults;
-  private final Repository repository;
+  private final IRepository repository;
   public DeviceSearchDialogue(Window owner){
     double windowWidth = 250;
     double windowHeight = 110;

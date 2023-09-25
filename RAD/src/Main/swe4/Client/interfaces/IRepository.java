@@ -9,10 +9,10 @@ import java.rmi.Remote;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface Repository extends Remote {
+public interface IRepository extends Remote {
 
   // USERS ==========================================================================
-  List<User> getAllUsers();
+  User[] getAllUsers();
 
   User getUserByUsername(String username);
 
@@ -25,16 +25,16 @@ public interface Repository extends Remote {
   boolean authenticateUser(String username, String password);
 
   // DEVICES =========================================================================
-  List<Device> getAllDevicesAdmin();
+  Device[] getAllDevicesAdmin();
 
-  List<Device> searchDevicesByInventoryId(String invNr);
-  List<Device> searchDevicesByName(String name);
-  List<Device> searchDevicesByBrand(String brand);
-  List<Device> searchDevicesByModel(String model);
-  List<Device> searchDevicesByCategory(String category);
+  Device[] searchDevicesByInventoryId(String invNr);
+  Device[] searchDevicesByName(String name);
+  Device[] searchDevicesByBrand(String brand);
+  Device[] searchDevicesByModel(String model);
+  Device[] searchDevicesByCategory(String category);
 
 
-  List<Device> getAllDevicesUser();
+  Device[] getAllDevicesUser();
 
   boolean addDevice(String inventoryId,
                     String inventoryCode,
@@ -52,7 +52,7 @@ public interface Repository extends Remote {
 
   void deleteDevice(String inventoryId);
 
-  List<String> getDeviceCategories();
+  String[] getDeviceCategories();
 
   boolean updateDevice(String inventoryIdBeforeUpdate,
                        String inventoryCodeBeforeUpdate,
@@ -72,7 +72,7 @@ public interface Repository extends Remote {
 
 
   // RESERVATIONS ========================================================================
-  List<Reservation> getAllReservations();
+  Reservation[] getAllReservations();
 
   void deleteReservation(int reservationId);
 
@@ -91,8 +91,8 @@ public interface Repository extends Remote {
                       LocalDate endDate,
                       String status);
 
-  List<Reservation> searchReservationsByInvId(String invId);
-  List<Reservation> searchReservationsByStatus(String status);
-  List<Reservation> searchReservationsByName(String name);
+  Reservation[] searchReservationsByInvId(String invId);
+  Reservation[] searchReservationsByStatus(String status);
+  Reservation[] searchReservationsByName(String name);
 }
 
