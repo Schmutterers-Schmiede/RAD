@@ -16,6 +16,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 public class Server implements IServer {
   private static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/RAD_db?autoReconnect=true&useSSL=false";
@@ -45,11 +46,13 @@ public class Server implements IServer {
 
   @Override
   public void addUser(User user) throws RemoteException {
+    
     try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
       userDao.add(user); // found
     } catch (Exception e) {
       e.printStackTrace();
     }
+
   }
 
   @Override

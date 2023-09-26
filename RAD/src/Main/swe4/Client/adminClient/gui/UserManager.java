@@ -104,7 +104,7 @@ public class UserManager {
   private void addUser() {
     AddUserDialogue addUserDialogue = new AddUserDialogue(stage);
     addUserDialogue.show();
-    users = FXCollections.observableArrayList(repository.getAllUsers());
+    users.setAll(repository.getAllUsers());
     tbv.refresh();
   }
 
@@ -112,7 +112,7 @@ public class UserManager {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diesen Benutzer löschen wollen?")) {
       users.removeIf(user -> user.getUsername().equals(username));//delete from UI
       repository.deleteUser(username); //delete from database
-      users = FXCollections.observableArrayList(repository.getAllUsers());
+      users.setAll(repository.getAllUsers());
       tbv.refresh();
     }
   }
@@ -123,7 +123,7 @@ public class UserManager {
     } else {
       EditUserDialogue editUserDialogue = new EditUserDialogue(stage, user);
       editUserDialogue.show();
-      users = FXCollections.observableArrayList(repository.getAllUsers());
+      users.setAll(repository.getAllUsers());
       tbv.refresh();
     }
   }
