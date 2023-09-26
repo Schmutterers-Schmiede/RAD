@@ -102,6 +102,7 @@ public class UserManager {
   }
 
   private void addUser() {
+
     AddUserDialogue addUserDialogue = new AddUserDialogue(stage);
     addUserDialogue.show();
     users.setAll(repository.getAllUsers());
