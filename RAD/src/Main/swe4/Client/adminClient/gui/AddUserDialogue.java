@@ -82,7 +82,7 @@ public class AddUserDialogue {
 
     Scene addUserScene = new Scene(rootPane);
     stage.setScene(addUserScene);
-    stage.setTitle("Add User");
+    stage.setTitle("Benutzer hinzufügen");
     stage.initModality(Modality.WINDOW_MODAL);
     stage.initOwner(owner);
     stage.setResizable(false);

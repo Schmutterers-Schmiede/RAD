@@ -6,13 +6,13 @@ public class User implements Serializable {
   private String name,
           username,
           password,
-          type;
+          role;
 
-  public User(String name, String username, String password, String type) {
-    this.name = name;
+  public User(String name, String username, String password, String role) {
     this.username = username;
+    this.name = name;
     this.password = password;
-    this.type = type;
+    this.role = role;
   }
 
   public String getName() {
@@ -39,11 +39,11 @@ public class User implements Serializable {
     this.password = password;
   }
 
-  public String getType() {
-    return type;
+  public String getRole() {
+    return role;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  public void setRole(String role) {
+    this.role = role;
   }
 }

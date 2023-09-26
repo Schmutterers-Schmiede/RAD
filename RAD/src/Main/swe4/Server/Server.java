@@ -1,7 +1,6 @@
 package swe4.Server;
 
-import swe4.Client.interfaces.IRepository;
-import swe4.Client.interfaces.IServer;
+import swe4.Server.Dal.UserDao;
 import swe4.entities.Device;
 import swe4.entities.Reservation;
 import swe4.entities.User;
@@ -16,44 +15,68 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class Server implements IServer {
-  private final User[] users;
-
-  public Server(){
-    users = new User[]{ new User("name1", "username1", "pw1", "Student"),
-                        new User("name2", "username2", "pw2", "Student"),
-                        new User("name3", "username3", "pw3", "Student")};
-  }
+  private static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/RAD_db?autoReconnect=true&useSSL=false";
+  private static final String USER_NAME = "root";
+  private static final String PASSWORD = null;
 
   @Override
   public User[] getAllUsers() throws RemoteException{
-    return users;
+    Collection<User> users = new ArrayList<>();
+    try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      users = userDao.getAll();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return users.toArray(new User[0]);
   }
 
   @Override
   public User getUserByUsername(String username) throws RemoteException{
-    return null;
+    try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      return userDao.getByUsername(username); // found
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null; //not found
   }
 
   @Override
-  public boolean addUser(String name, String username, String password, String type) throws RemoteException {
-    return false;
+  public void addUser(User user) throws RemoteException {
+    try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      userDao.add(user); // found
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
-  public boolean updateUser(String usernameBeforeUpdate, String name, String username, String password, String type) throws RemoteException {
-    return false;
+  public void updateUser(String usernameBeforeUpdate, User user) throws RemoteException {
+    try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      userDao.update(usernameBeforeUpdate, user); // found
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void deleteUser(String username) throws RemoteException {
-
+    try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      userDao.delete(username); // found
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public boolean authenticateUser(String username, String password) throws RemoteException {
+    try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      return userDao.authenticate(username, password);
+    }catch (Exception e) {
+      e.printStackTrace();
+    }
     return false;
   }
 
@@ -93,8 +116,8 @@ public class Server implements IServer {
   }
 
   @Override
-  public boolean addDevice(String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate logDate, BigDecimal price, String status, String comments, String category) throws RemoteException {
-    return false;
+  public void addDevice(Device device) throws RemoteException {
+
   }
 
   @Override
@@ -108,8 +131,8 @@ public class Server implements IServer {
   }
 
   @Override
-  public boolean updateDevice(String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate disposalDate, BigDecimal price, String status, String comments, String category) throws RemoteException {
-    return false;
+  public void updateDevice(String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, Device device) throws RemoteException {
+
   }
 
   @Override
@@ -130,11 +153,6 @@ public class Server implements IServer {
   @Override
   public Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) throws RemoteException {
     return null;
-  }
-
-  @Override
-  public boolean reservationsOverlap(String invId, LocalDate startDate, LocalDate endDate) throws RemoteException {
-    return false;
   }
 
   @Override

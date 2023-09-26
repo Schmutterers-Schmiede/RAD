@@ -1,7 +1,7 @@
 package swe4.Client;
 
 import swe4.Client.interfaces.IRepository;
-import swe4.Client.interfaces.IServer;
+import swe4.Server.IServer;
 import swe4.entities.Device;
 import swe4.entities.Reservation;
 import swe4.entities.User;
@@ -48,26 +48,49 @@ public class ServerRepository implements IRepository {
 
   @Override
   public User getUserByUsername(String username) {
-    return null;
+    try{
+      return serverProxy.getUserByUsername(username);//found
+    }catch (RemoteException e){e.printStackTrace();}
+    return null; //not found
   }
 
   @Override
-  public boolean addUser(String name, String username, String password, String type) {
+  public boolean addUser(String name, String username, String password, String role) {
+    try{
+      if(serverProxy.getUserByUsername(username) == null){
+        serverProxy.addUser(new User(name, username, password, role));
+        return true;
+      }
+      else return false;
+    }catch (RemoteException e){e.printStackTrace();}
     return false;
   }
 
   @Override
-  public boolean updateUser(String usernameBeforeUpdate, String name, String username, String password, String type) {
+  public boolean updateUser(String usernameBeforeUpdate, String name, String username, String password, String role) {
+    try{
+      if(!username.equals(usernameBeforeUpdate) && serverProxy.getUserByUsername(username) != null){
+        return false;
+      }else {
+        serverProxy.updateUser(usernameBeforeUpdate, new User(username, name, password, role));
+        return true;
+      }
+    }catch (RemoteException e){e.printStackTrace();}
     return false;
   }
 
   @Override
   public void deleteUser(String username) {
-
+    try{
+      serverProxy.deleteUser(username);
+    }catch (RemoteException e){e.printStackTrace();}
   }
 
   @Override
   public boolean authenticateUser(String username, String password) {
+    try{
+      return serverProxy.authenticateUser(username, password);
+    }catch (RemoteException e){e.printStackTrace();}
     return false;
   }
 

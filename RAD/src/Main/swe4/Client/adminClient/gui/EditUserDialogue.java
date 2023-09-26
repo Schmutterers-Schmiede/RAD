@@ -44,7 +44,7 @@ public class EditUserDialogue {
     tfName.setText(user.getName());
     tfUsername.setText(user.getUsername());
     tfPassword.setText(user.getPassword());
-    cbType.setValue(user.getType());
+    cbType.setValue(user.getRole());
 
     Button btnConfirmUpdateUser = new Button("Ändern");
     btnConfirmUpdateUser.setOnAction(event -> updateUser(usernameBeforeUpdate,

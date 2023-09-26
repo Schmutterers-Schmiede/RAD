@@ -198,7 +198,7 @@ public class FakeRepository implements IRepository {
       userToUpdate.setName(name);
       userToUpdate.setUsername(username);
       userToUpdate.setPassword(password);
-      userToUpdate.setType(type);
+      userToUpdate.setRole(type);
     }
     return true;
   }

@@ -1,4 +1,4 @@
-package swe4.Client.interfaces;
+package swe4.Server;
 
 import swe4.entities.Device;
 import swe4.entities.Reservation;
@@ -16,9 +16,9 @@ public interface IServer extends Remote {
 
   User getUserByUsername(String username) throws RemoteException;
 
-  boolean addUser(String name, String username, String password, String type) throws RemoteException;
+  void addUser(User user) throws RemoteException;
 
-  boolean updateUser(String usernameBeforeUpdate, String name, String username, String password, String type) throws RemoteException;
+  void updateUser(String usernameBeforeUpdate, User user) throws RemoteException;
 
   void deleteUser(String username) throws RemoteException;
 
@@ -36,39 +36,13 @@ public interface IServer extends Remote {
 
   Device[] getAllDevicesUser() throws RemoteException;
 
-  boolean addDevice(String inventoryId,
-                    String inventoryCode,
-                    String name,
-                    String brand,
-                    String model,
-                    String serialNr,
-                    String roomNr,
-                    LocalDate buyDate,
-                    LocalDate logDate,
-                    BigDecimal price,
-                    String status,
-                    String comments,
-                    String category) throws RemoteException;
+  void addDevice(Device device) throws RemoteException;
 
   void deleteDevice(String inventoryId) throws RemoteException;
 
   String[] getDeviceCategories() throws RemoteException;
 
-  boolean updateDevice(String inventoryIdBeforeUpdate,
-                       String inventoryCodeBeforeUpdate,
-                       String inventoryId,
-                       String inventoryCode,
-                       String name,
-                       String brand,
-                       String model,
-                       String serialNr,
-                       String roomNr,
-                       LocalDate buyDate,
-                       LocalDate disposalDate,
-                       BigDecimal price,
-                       String status,
-                       String comments,
-                       String category) throws RemoteException;
+  void updateDevice(String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, Device device) throws RemoteException;
 
 
   // RESERVATIONS ========================================================================
@@ -80,16 +54,7 @@ public interface IServer extends Remote {
 
   Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) throws RemoteException;
 
-  boolean reservationsOverlap(String invId, LocalDate startDate, LocalDate endDate) throws RemoteException;
-
-  void addReservation(String username,
-                      String invId,
-                      String invCode,
-                      String brand,
-                      String model,
-                      LocalDate startDate,
-                      LocalDate endDate,
-                      String status) throws RemoteException;
+  void addReservation(String username, String invId, String invCode, String brand, String model, LocalDate startDate, LocalDate endDate, String status) throws RemoteException;
 
   Reservation[] searchReservationsByInvId(String invId) throws RemoteException;
   Reservation[] searchReservationsByStatus(String status) throws RemoteException;

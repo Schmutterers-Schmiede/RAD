@@ -42,14 +42,14 @@ public class UserManager {
     TableColumn nameCol = new TableColumn("Name");
     TableColumn usernameCol = new TableColumn("Benutzername");
     TableColumn passwordCol = new TableColumn("Passwort");
-    TableColumn typeCol = new TableColumn("Art");
+    TableColumn roleCol = new TableColumn("Rolle");
 
     nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
     usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
     passwordCol.setCellValueFactory(new PropertyValueFactory<>("password"));
-    typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+    roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-    tbv.getColumns().addAll(nameCol, usernameCol, passwordCol, typeCol);
+    tbv.getColumns().addAll(nameCol, usernameCol, passwordCol, roleCol);
 
     Button btAddUser = new Button("Hinzufügen");
     btAddUser.setId("btn_add-user");
