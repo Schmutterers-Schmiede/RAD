@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Device implements Serializable {
+  private int deviceId;
   private String inventoryId,
           inventoryCode,
           name,
@@ -23,6 +24,38 @@ public class Device implements Serializable {
 
   private BigDecimal price;
 
+  public Device(
+          int deviceId,
+          String inventoryId,
+          String inventoryCode,
+          String name,
+          String brand,
+          String model,
+          String serialNr,
+          String roomNr,
+          LocalDate buyDate,
+          LocalDate logDate,
+          BigDecimal price,
+          String status,
+          String comments,
+          String category
+  ){
+    this.deviceId = deviceId;
+    this.inventoryId = inventoryId;
+    this.inventoryCode = inventoryCode;
+    this.name = name;
+    this.brand = brand;
+    this.model = model;
+    this.serialNr = serialNr;
+    this.roomNr = roomNr;
+    this.comments = comments;
+    this.buyDate = buyDate;
+    this.logDate = logDate;
+    this.disposalDate = null;
+    this.price = price;
+    this.status = status;
+    this.category = category;
+  }
   public Device(
           String inventoryId,
           String inventoryCode,
@@ -165,5 +198,13 @@ public class Device implements Serializable {
 
   public void setCategory(String category) {
     this.category = category;
+  }
+
+  public int getDeviceId() {
+    return deviceId;
+  }
+
+  public void setDeviceId(int deviceId) {
+    this.deviceId = deviceId;
   }
 }

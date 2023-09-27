@@ -111,8 +111,7 @@ public class UserManager {
 
   private void deleteUser(String username) {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diesen Benutzer löschen wollen?")) {
-      users.removeIf(user -> user.getUsername().equals(username));//delete from UI
-      repository.deleteUser(username); //delete from database
+      repository.deleteUser(username);
       users.setAll(repository.getAllUsers());
       tbv.refresh();
     }

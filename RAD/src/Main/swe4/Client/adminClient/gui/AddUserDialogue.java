@@ -55,7 +55,7 @@ public class AddUserDialogue {
     btnCancel.setPrefWidth(UIDimensions.buttonWidthShort());
 
     Label lbName = new Label("Name:");
-    Label lbUsername = new Label("Username:");
+    Label lbUsername = new Label("Benutzername:");
     Label lbPassword = new Label("Password");
     Label lbType = new Label("Art:");
 

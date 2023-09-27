@@ -142,6 +142,7 @@ public class EditDeviceDialogue {
 
     Button btnConfirmUpdateDevice = new Button("Ändern");
     btnConfirmUpdateDevice.setOnAction(event -> updateDevice(
+            device.getDeviceId(),
             device.getInventoryId(),
             device.getInventoryCode(),
             tfInvId.getText(),
@@ -178,7 +179,9 @@ public class EditDeviceDialogue {
     stage.setResizable(false);
   }
 
-  void updateDevice(String inventoryIdBeforeUpdate,
+  void updateDevice(
+                    int deviceId,
+                    String inventoryIdBeforeUpdate,
                     String inventoryCodeBeforeUpdate,
                     String inventoryId,
                     String inventoryCode,
@@ -200,7 +203,7 @@ public class EditDeviceDialogue {
             brand.isEmpty() ||
             serialNr.isEmpty() ||
             roomNr.isEmpty() ||
-            DateChecker.notNull(buyDate) ||
+            !DateChecker.notNull(buyDate) ||
             price.isEmpty() ||
             status.isEmpty() ||
             category.isEmpty()) {
@@ -214,8 +217,9 @@ public class EditDeviceDialogue {
       return;
     }
 
-    BigDecimal bdprice = new BigDecimal(price);
+    BigDecimal bdPrice = new BigDecimal(price);
     if (repository.updateDevice(
+            deviceId,
             inventoryIdBeforeUpdate,
             inventoryCodeBeforeUpdate,
             inventoryId,
@@ -227,7 +231,7 @@ public class EditDeviceDialogue {
             roomNr,
             buyDate,
             disposalDate,
-            bdprice,
+            bdPrice,
             status,
             comments,
             category)) {

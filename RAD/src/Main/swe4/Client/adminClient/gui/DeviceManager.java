@@ -140,7 +140,7 @@ public class DeviceManager {
     } else {
       EditDeviceDialogue editDeviceDialogue = new EditDeviceDialogue(stage, device);
       editDeviceDialogue.show();
-      devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
+      devices.setAll(repository.getAllDevicesAdmin());
       tbv.refresh();
     }
   }

@@ -38,7 +38,7 @@ public class ReservationSearchDialogue {
     tfSearchTerm = new TextField();
 
     cbSearchFor = new ComboBox<>();
-    cbSearchFor.setItems(FXCollections.observableArrayList("InventarNr", "Status"));
+    cbSearchFor.setItems(FXCollections.observableArrayList("InventarNr", "Status", "Name"));
     cbSearchFor.setPromptText("Auswählen...");
 
     Button btSearch = new Button("Suchen");

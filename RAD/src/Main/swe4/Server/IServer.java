@@ -33,7 +33,7 @@ public interface IServer extends Remote {
   Device[] searchDevicesByBrand(String brand) throws RemoteException;
   Device[] searchDevicesByModel(String model) throws RemoteException;
   Device[] searchDevicesByCategory(String category) throws RemoteException;
-
+  Device[] searchDevicesByInventoryCode(String invCode) throws RemoteException;
 
   Device[] getAllDevicesUser() throws RemoteException;
 
@@ -43,7 +43,7 @@ public interface IServer extends Remote {
 
   String[] getDeviceCategories() throws RemoteException;
 
-  void updateDevice(String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, Device device) throws RemoteException;
+  void updateDevice(String inventoryIdBeforeUpdate, Device device) throws RemoteException;
 
 
   // RESERVATIONS ========================================================================
@@ -51,11 +51,11 @@ public interface IServer extends Remote {
 
   void deleteReservation(int reservationId) throws RemoteException;
 
-  boolean updateReservation(int reservationId, LocalDate startDate, LocalDate endDate) throws RemoteException;
+  void updateReservation(int reservationId, LocalDate startDate, LocalDate endDate) throws RemoteException;
 
   Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) throws RemoteException;
 
-  void addReservation(String username, String invId, String invCode, String brand, String model, LocalDate startDate, LocalDate endDate, String status) throws RemoteException;
+  void addReservation(String username, String invId, LocalDate startDate, LocalDate endDate) throws RemoteException;
 
   Reservation[] searchReservationsByInvId(String invId) throws RemoteException;
   Reservation[] searchReservationsByStatus(String status) throws RemoteException;

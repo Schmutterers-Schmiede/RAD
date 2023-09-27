@@ -54,7 +54,8 @@ public interface IRepository extends Remote {
 
   String[] getDeviceCategories();
 
-  boolean updateDevice(String inventoryIdBeforeUpdate,
+  boolean updateDevice(int deviceId,
+                       String inventoryIdBeforeUpdate,
                        String inventoryCodeBeforeUpdate,
                        String inventoryId,
                        String inventoryCode,
@@ -76,11 +77,9 @@ public interface IRepository extends Remote {
 
   void deleteReservation(int reservationId);
 
-  boolean updateReservation(int reservationId, LocalDate startDate, LocalDate endDate);
+  boolean updateReservation(String invId, int reservationId, LocalDate startDate, LocalDate endDate);
 
-  List<Reservation> getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate);
-
-  boolean reservationsOverlap(String invId, LocalDate startDate, LocalDate endDate);
+  Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate);
 
   void addReservation(String username,
                       String invId,

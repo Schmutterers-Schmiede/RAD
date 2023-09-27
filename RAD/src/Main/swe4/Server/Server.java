@@ -1,5 +1,7 @@
 package swe4.Server;
 
+import swe4.Server.Dal.DeviceDao;
+import swe4.Server.Dal.ReservationDao;
 import swe4.Server.Dal.UserDao;
 import swe4.entities.Device;
 import swe4.entities.Reservation;
@@ -46,7 +48,7 @@ public class Server implements IServer {
 
   @Override
   public void addUser(User user) throws RemoteException {
-    
+
     try(UserDao userDao = new UserDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
       userDao.add(user); // found
     } catch (Exception e) {
@@ -85,97 +87,246 @@ public class Server implements IServer {
 
   @Override
   public Device[] getAllDevicesAdmin() throws RemoteException {
-    return null;
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getAllForAdmin();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
   }
 
   @Override
-  public Device[] searchDevicesByInventoryId(String invNr) throws RemoteException {
-    return null;
+  public Device[] searchDevicesByInventoryId(String invId) throws RemoteException {
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getByInventoryId(invId);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
   }
 
   @Override
   public Device[] searchDevicesByName(String name) throws RemoteException {
-    return null;
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getByName(name);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
   }
 
   @Override
   public Device[] searchDevicesByBrand(String brand) throws RemoteException {
-    return null;
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getByBrand(brand);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
   }
 
   @Override
   public Device[] searchDevicesByModel(String model) throws RemoteException {
-    return null;
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getByModel(model);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
   }
 
   @Override
   public Device[] searchDevicesByCategory(String category) throws RemoteException {
-    return null;
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getByCategory(category);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
+  }
+
+  @Override
+  public Device[] searchDevicesByInventoryCode(String invCode) throws RemoteException {
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getByInventoryCode(invCode);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
   }
 
   @Override
   public Device[] getAllDevicesUser() throws RemoteException {
-    return null;
+    Collection<Device> devices = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      devices = deviceDao.getAllForUser();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return devices.toArray(new Device[0]);
   }
 
   @Override
   public void addDevice(Device device) throws RemoteException {
-
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      deviceDao.add(device);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void deleteDevice(String inventoryId) throws RemoteException {
-
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      deviceDao.delete(inventoryId);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public String[] getDeviceCategories() throws RemoteException {
-    return null;
+    Collection<String> categories = new ArrayList<>();
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      deviceDao.getCategories();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    String[] result = new String[categories.size()];
+    int i = 0;
+    for(var cat : categories){
+      result[i] = cat;
+      i++;
+    }
+    return result;
   }
 
   @Override
-  public void updateDevice(String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, Device device) throws RemoteException {
-
+  public void updateDevice(String inventoryIdBeforeUpdate, Device device) throws RemoteException {
+    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      deviceDao.update(inventoryIdBeforeUpdate, device);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public Reservation[] getAllReservations() throws RemoteException {
-    return null;
+    Collection<Reservation> reservations = new ArrayList<>();
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservations = reservationDao.getAll();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    Reservation[] result = new Reservation[reservations.size()];
+    int i = 0;
+    for(var res : reservations){
+      result[i] = res;
+      i++;
+    }
+    return result;
   }
 
   @Override
   public void deleteReservation(int reservationId) throws RemoteException {
-
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservationDao.delete(reservationId);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
-  public boolean updateReservation(int reservationId, LocalDate startDate, LocalDate endDate) throws RemoteException {
-    return false;
+  public void updateReservation(int reservationId, LocalDate startDate, LocalDate endDate) throws RemoteException {
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservationDao.update(reservationId, startDate, endDate);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) throws RemoteException {
-    return null;
+    Collection<Reservation> reservations = new ArrayList<>();
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservations = reservationDao.getConflicts(invId, startDate, endDate);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    Reservation[] result = new Reservation[reservations.size()];
+    int i = 0;
+    for(var res : reservations){
+      result[i] = res;
+      i++;
+    }
+    return result;
   }
 
   @Override
-  public void addReservation(String username, String invId, String invCode, String brand, String model, LocalDate startDate, LocalDate endDate, String status) throws RemoteException {
-
+  public void addReservation(String username, String invId, LocalDate startDate, LocalDate endDate) throws RemoteException{
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservationDao.add(username, invId, startDate, endDate);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public Reservation[] searchReservationsByInvId(String invId) throws RemoteException {
-    return null;
+    Collection<Reservation> reservations = new ArrayList<>();
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservations = reservationDao.getByInventoryId(invId);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    Reservation[] result = new Reservation[reservations.size()];
+    int i = 0;
+    for(var res : reservations){
+      result[i] = res;
+      i++;
+    }
+    return result;
   }
 
   @Override
   public Reservation[] searchReservationsByStatus(String status) throws RemoteException {
-    return null;
+    Collection<Reservation> reservations = new ArrayList<>();
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservations = reservationDao.getByStatus(status);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    Reservation[] result = new Reservation[reservations.size()];
+    int i = 0;
+    for(var res : reservations){
+      result[i] = res;
+      i++;
+    }
+    return result;
   }
 
   @Override
   public Reservation[] searchReservationsByName(String name) throws RemoteException {
-    return null;
+    Collection<Reservation> reservations = new ArrayList<>();
+    try(ReservationDao reservationDao = new ReservationDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
+      reservations = reservationDao.getByName(name);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    Reservation[] result = new Reservation[reservations.size()];
+    int i = 0;
+    for(var res : reservations){
+      result[i] = res;
+      i++;
+    }
+    return result;
   }
 
   public static void main(String[] args) throws RemoteException, MalformedURLException {

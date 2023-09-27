@@ -96,101 +96,162 @@ public class ServerRepository implements IRepository {
 
   @Override
   public Device[] getAllDevicesAdmin() {
-    return null;
+    try{
+      return serverProxy.getAllDevicesAdmin();
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Device[0];
   }
 
   @Override
-  public Device[] searchDevicesByInventoryId(String invNr) {
-    return null;
+  public Device[] searchDevicesByInventoryId(String invId) {
+    try{
+      return serverProxy.searchDevicesByInventoryId(invId);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Device[0];
   }
 
   @Override
   public Device[] searchDevicesByName(String name) {
-    return null;
+    try{
+      return serverProxy.searchDevicesByName(name);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Device[0];
   }
 
   @Override
   public Device[] searchDevicesByBrand(String brand) {
-    return null;
+    try{
+      return serverProxy.searchDevicesByBrand(brand);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Device[0];
   }
 
   @Override
   public Device[] searchDevicesByModel(String model) {
-    return null;
+    try{
+      return serverProxy.searchDevicesByModel(model);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Device[0];
   }
 
   @Override
   public Device[] searchDevicesByCategory(String category) {
-    return null;
+    try{
+      return serverProxy.searchDevicesByCategory(category);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Device[0];
   }
 
   @Override
   public Device[] getAllDevicesUser() {
-    return null;
+    try{
+      return serverProxy.getAllDevicesUser();
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Device[0];
   }
 
   @Override
   public boolean addDevice(String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate logDate, BigDecimal price, String status, String comments, String category) {
+    try{
+      if(serverProxy.searchDevicesByInventoryId(inventoryId).length != 0) {
+        serverProxy.addDevice(new Device(inventoryId, inventoryCode, name, brand, model, serialNr, roomNr, buyDate, logDate, price, status, comments, category));
+        return true;
+      }
+    }catch (RemoteException e){e.printStackTrace();}
     return false;
   }
 
   @Override
   public void deleteDevice(String inventoryId) {
-
+    try{
+      serverProxy.deleteDevice(inventoryId);
+    }catch (RemoteException e){e.printStackTrace();}
   }
 
   @Override
   public String[] getDeviceCategories() {
-    return null;
+    try{
+      return serverProxy.getDeviceCategories();
+    }catch (RemoteException e){e.printStackTrace();}
+    return new String[0];
   }
 
   @Override
-  public boolean updateDevice(String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate disposalDate, BigDecimal price, String status, String comments, String category) {
+  public boolean updateDevice(int deviceId, String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate disposalDate, BigDecimal price, String status, String comments, String category) {
+    try{
+      if(serverProxy.searchDevicesByInventoryId(inventoryIdBeforeUpdate).length != 0 ||
+          serverProxy.searchDevicesByInventoryCode(inventoryCodeBeforeUpdate).length != 0){
+        return false;
+      }
+      serverProxy.updateDevice(inventoryIdBeforeUpdate, new Device(inventoryId, inventoryCode, name, brand, model, serialNr, roomNr, buyDate, LocalDate.now(), price, status, comments, category));
+      return true;
+    } catch (RemoteException e){e.printStackTrace();}
     return false;
   }
 
   @Override
   public Reservation[] getAllReservations() {
-    return null;
+    try{
+      return serverProxy.getAllReservations();
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Reservation[0];
   }
 
   @Override
   public void deleteReservation(int reservationId) {
-
+    try{
+      serverProxy.deleteReservation(reservationId);
+    }catch (RemoteException e){e.printStackTrace();}
   }
 
   @Override
-  public boolean updateReservation(int reservationId, LocalDate startDate, LocalDate endDate) {
+  public boolean updateReservation(String invId, int reservationId, LocalDate startDate, LocalDate endDate) {
+    try{
+      if(serverProxy.getReservationConflicts(invId, startDate, endDate).length != 0){
+        return false;
+      }
+      serverProxy.updateReservation(reservationId, startDate, endDate);
+      return true;
+    }catch (RemoteException e){e.printStackTrace();}
     return false;
   }
 
   @Override
-  public List<Reservation> getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) {
-    return null;
-  }
-
-  @Override
-  public boolean reservationsOverlap(String invId, LocalDate startDate, LocalDate endDate) {
-    return false;
+  public Reservation[] getReservationConflicts(String invId, LocalDate startDate, LocalDate endDate) {
+    try{
+      return serverProxy.getReservationConflicts(invId, startDate, endDate);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Reservation[0];
   }
 
   @Override
   public void addReservation(String username, String invId, String invCode, String brand, String model, LocalDate startDate, LocalDate endDate, String status) {
-
+    try{
+      serverProxy.addReservation(username, invId, startDate, endDate);
+    }catch (RemoteException e){e.printStackTrace();}
   }
 
   @Override
   public Reservation[] searchReservationsByInvId(String invId) {
-    return null;
+    try{
+      return serverProxy.searchReservationsByInvId(invId);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Reservation[0];
   }
 
   @Override
   public Reservation[] searchReservationsByStatus(String status) {
-    return null;
+    try{
+      return serverProxy.searchReservationsByStatus(status);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Reservation[0];
   }
 
   @Override
   public Reservation[] searchReservationsByName(String name) {
-    return null;
+    try{
+      return serverProxy.searchReservationsByName(name);
+    }catch (RemoteException e){e.printStackTrace();}
+    return new Reservation[0];
   }
 }

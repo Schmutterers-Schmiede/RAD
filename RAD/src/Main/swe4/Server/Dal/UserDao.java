@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class UserDao implements IUserDao {
   private Connection connection;
-  private String
+  private final String
           connectionString,
           username,
           password;
@@ -45,8 +45,8 @@ public class UserDao implements IUserDao {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           c.add(new User(
-                  resultSet.getString("username"),
                   resultSet.getString("name"),
+                  resultSet.getString("username"),
                   resultSet.getString("password"),
                   resultSet.getString("role")
           ));
@@ -101,7 +101,7 @@ public class UserDao implements IUserDao {
   @Override
   public void delete(String username) {
     try (PreparedStatement statement =
-                 getConnection().prepareStatement("delete FROM users where username = ?")) {
+                 getConnection().prepareStatement("DELETE FROM users WHERE username = ?")) {
       statement.setString(1, username);
       statement.executeUpdate();
     }
@@ -139,7 +139,7 @@ public class UserDao implements IUserDao {
   @Override
   public void update(String usernameBeforeUpdate, User user ) {
     try (PreparedStatement statement = getConnection().prepareStatement(
-    "update users SET username= ?, name= ?, password= ?, role= ? where username = ?")) {
+    "UPDATE users SET username= ?, name= ?, password= ?, role= ? WHERE username = ?")) {
       statement.setString(1, user.getUsername());
       statement.setString(2, user.getName());
       statement.setString(3, user.getPassword());
@@ -154,6 +154,12 @@ public class UserDao implements IUserDao {
 
   @Override
   public void close() throws Exception {
-
+    try {
+      if (connection != null) connection.close();
+      connection = null;
+    }
+    catch (SQLException ex) {
+      throw new DataAccessException("Problems closing database connection: SQLException: " + ex.getMessage());
+    } // catch
   }
 }

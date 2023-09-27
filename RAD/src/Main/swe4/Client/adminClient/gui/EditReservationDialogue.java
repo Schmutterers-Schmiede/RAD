@@ -39,6 +39,7 @@ public class EditReservationDialogue {
     Button btnConfirmUpdateReservation = new Button("Ändern");
 
     btnConfirmUpdateReservation.setOnAction(event -> updateReservation(
+            reservation.getInvId(),
             reservation.getReservationId(),
             dpStartDate.getValue(),
             dpEndDate.getValue()));
@@ -83,7 +84,7 @@ public class EditReservationDialogue {
     stage.showAndWait();
   }
 
-  private void updateReservation(int reservationId, LocalDate startDate, LocalDate endDate) {
+  private void updateReservation(String invId, int reservationId, LocalDate startDate, LocalDate endDate) {
     if( !(DateChecker.notNull(startDate) || DateChecker.notNull(endDate)) ||
         !DateChecker.dateIsPresentOrFuture(startDate) ||
         !DateChecker.datesAreInOrder(startDate, endDate)){
@@ -97,7 +98,7 @@ public class EditReservationDialogue {
       return;
     }
 
-    if (repository.updateReservation(reservationId, startDate, endDate)) {
+    if (repository.updateReservation(invId, reservationId, startDate, endDate)) {
       stage.hide();
     } else {
       ErrorPrompt.show("Dieser Zeitraum überschneidet sich mit einer anderen Reservierung.");
