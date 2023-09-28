@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ConfirmationPrompt;
@@ -45,7 +44,7 @@ public class ReservationManager {
     TableColumn modelCol = new TableColumn("Modell");
     TableColumn brandCol = new TableColumn("Hersteller");
     TableColumn invIdCol = new TableColumn("InventarNr");
-    TableColumn invCodeCol = new TableColumn("InventarCode");
+    TableColumn statusCodeCol = new TableColumn("Status");
     TableColumn startDateCol = new TableColumn("Von");
     TableColumn endDateCol = new TableColumn("Bis");
 
@@ -53,7 +52,7 @@ public class ReservationManager {
     modelCol.setMinWidth(minColWidth);
     brandCol.setMinWidth(minColWidth);
     invIdCol.setMinWidth(minColWidth);
-    invCodeCol.setMinWidth(minColWidth);
+    statusCodeCol.setMinWidth(minColWidth);
     startDateCol.setMinWidth(minColWidth);
     endDateCol.setMinWidth(minColWidth);
 
@@ -62,11 +61,11 @@ public class ReservationManager {
     modelCol.setCellValueFactory(new PropertyValueFactory<>("model"));
     brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
     invIdCol.setCellValueFactory(new PropertyValueFactory<>("invId"));
-    invCodeCol.setCellValueFactory(new PropertyValueFactory<>("invCode"));
+    statusCodeCol.setCellValueFactory(new PropertyValueFactory<>("status"));
     startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
     endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
-    tbv.getColumns().addAll(nameCol, modelCol, brandCol, invIdCol, invCodeCol, startDateCol, endDateCol);
+    tbv.getColumns().addAll(nameCol, modelCol, brandCol, invIdCol, statusCodeCol, startDateCol, endDateCol);
 
     Button btEditReservation = new Button("Bearbeiten");
     btEditReservation.setOnAction(event -> editReservation(tbv.getSelectionModel().getSelectedItem()));
@@ -95,7 +94,7 @@ public class ReservationManager {
     tableContainer.setAlignment(Pos.CENTER);
 
     HBox buttonPane = new HBox(UIDimensions.buttonSpacing());
-    buttonPane.getChildren().addAll(btEditReservation, btSearch, btDeleteReservation, UIDimensions.createSpacer(), btBack);
+    buttonPane.getChildren().addAll(btEditReservation, btSearch,btReset, btDeleteReservation, UIDimensions.createSpacer(), btBack);
 
 
     VBox rootPane = new VBox(UIDimensions.containerSpacing());
@@ -109,7 +108,7 @@ public class ReservationManager {
     stage.initOwner(owner);
     stage.setResizable(false);
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
   }
 
   private void reset() {
@@ -133,7 +132,7 @@ public class ReservationManager {
   private void deleteReservation(int reservationId) {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diese Reservierung stornieren wollen?")) {
       repository.deleteReservation(reservationId);
-      reservations = FXCollections.observableArrayList(repository.getAllReservations());
+      reservations.setAll(repository.getAllReservations());
       tbv.refresh();
     }
   }
@@ -144,7 +143,7 @@ public class ReservationManager {
     } else {
       EditReservationDialogue editReservationDialogue = new EditReservationDialogue(stage, reservation);
       editReservationDialogue.show();
-      reservations = FXCollections.observableArrayList(repository.getAllReservations());
+      reservations.setAll(repository.getAllReservations());
       tbv.refresh();
     }
   }

@@ -16,14 +16,12 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.DateChecker;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Reservation;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class CheckAvailabilityDialogue {
   private final Stage stage = new Stage();
@@ -35,7 +33,7 @@ public class CheckAvailabilityDialogue {
     double windowWidth = 250;
     double windowHeight = 110;
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
 
     Label lbStartDate = new Label("Von:");
     Label lbEndDate = new Label("Bis:");

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-import java.util.List;
+
 
 public class ServerRepository implements IRepository {
   private static ServerRepository instance;
@@ -36,7 +36,6 @@ public class ServerRepository implements IRepository {
   @Override
   public User[] getAllUsers() {
     try{
-
       return serverProxy.getAllUsers();
     } catch (NullPointerException e){
       System.out.println("exception in getallUsers");
@@ -72,7 +71,7 @@ public class ServerRepository implements IRepository {
       if(!username.equals(usernameBeforeUpdate) && serverProxy.getUserByUsername(username) != null){
         return false;
       }else {
-        serverProxy.updateUser(usernameBeforeUpdate, new User(username, name, password, role));
+        serverProxy.updateUser(usernameBeforeUpdate, new User(name, username, password, role));
         return true;
       }
     }catch (RemoteException e){e.printStackTrace();}
@@ -95,66 +94,59 @@ public class ServerRepository implements IRepository {
   }
 
   @Override
-  public Device[] getAllDevicesAdmin() {
+  public Device[] getAllDevices(boolean isForUser) {
     try{
-      return serverProxy.getAllDevicesAdmin();
+      return serverProxy.getAllDevices(isForUser);
     }catch (RemoteException e){e.printStackTrace();}
     return new Device[0];
   }
 
   @Override
-  public Device[] searchDevicesByInventoryId(String invId) {
+  public Device[] searchDevicesByInventoryId(String invId, boolean isForUser) {
     try{
-      return serverProxy.searchDevicesByInventoryId(invId);
+      return serverProxy.searchDevicesByInventoryId(invId, isForUser);
     }catch (RemoteException e){e.printStackTrace();}
     return new Device[0];
   }
 
   @Override
-  public Device[] searchDevicesByName(String name) {
+  public Device[] searchDevicesByName(String name, boolean isForUser) {
     try{
-      return serverProxy.searchDevicesByName(name);
+      return serverProxy.searchDevicesByName(name, isForUser);
     }catch (RemoteException e){e.printStackTrace();}
     return new Device[0];
   }
 
   @Override
-  public Device[] searchDevicesByBrand(String brand) {
+  public Device[] searchDevicesByBrand(String brand, boolean isForUser) {
     try{
-      return serverProxy.searchDevicesByBrand(brand);
+      return serverProxy.searchDevicesByBrand(brand, isForUser);
     }catch (RemoteException e){e.printStackTrace();}
     return new Device[0];
   }
 
   @Override
-  public Device[] searchDevicesByModel(String model) {
+  public Device[] searchDevicesByModel(String model, boolean isForUser) {
     try{
-      return serverProxy.searchDevicesByModel(model);
+      return serverProxy.searchDevicesByModel(model, isForUser);
     }catch (RemoteException e){e.printStackTrace();}
     return new Device[0];
   }
 
   @Override
-  public Device[] searchDevicesByCategory(String category) {
+  public Device[] searchDevicesByCategory(String category, boolean isForUser) {
     try{
-      return serverProxy.searchDevicesByCategory(category);
+      return serverProxy.searchDevicesByCategory(category, isForUser);
     }catch (RemoteException e){e.printStackTrace();}
     return new Device[0];
   }
 
   @Override
-  public Device[] getAllDevicesUser() {
+  public boolean addDevice(String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate logDate, BigDecimal price, String comments, String category) {
     try{
-      return serverProxy.getAllDevicesUser();
-    }catch (RemoteException e){e.printStackTrace();}
-    return new Device[0];
-  }
-
-  @Override
-  public boolean addDevice(String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate logDate, BigDecimal price, String status, String comments, String category) {
-    try{
-      if(serverProxy.searchDevicesByInventoryId(inventoryId).length != 0) {
-        serverProxy.addDevice(new Device(inventoryId, inventoryCode, name, brand, model, serialNr, roomNr, buyDate, logDate, price, status, comments, category));
+      if(serverProxy.searchDevicesByInventoryId(inventoryId, false).length == 0 &&
+         serverProxy.searchDevicesByInventoryCode(inventoryCode, false).length == 0) {
+        serverProxy.addDevice(new Device(inventoryId, inventoryCode, name, brand, model, serialNr, roomNr, buyDate, logDate, price, comments, category));
         return true;
       }
     }catch (RemoteException e){e.printStackTrace();}
@@ -179,10 +171,13 @@ public class ServerRepository implements IRepository {
   @Override
   public boolean updateDevice(int deviceId, String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate disposalDate, BigDecimal price, String status, String comments, String category) {
     try{
-      if(serverProxy.searchDevicesByInventoryId(inventoryIdBeforeUpdate).length != 0 ||
-          serverProxy.searchDevicesByInventoryCode(inventoryCodeBeforeUpdate).length != 0){
+      if(!inventoryCodeBeforeUpdate.equals(inventoryCode) &&
+          serverProxy.searchDevicesByInventoryId(inventoryIdBeforeUpdate, false).length != 0 ||
+         !inventoryIdBeforeUpdate.equals(inventoryId) &&
+          serverProxy.searchDevicesByInventoryCode(inventoryCodeBeforeUpdate, false).length != 0){
         return false;
       }
+
       serverProxy.updateDevice(inventoryIdBeforeUpdate, new Device(inventoryId, inventoryCode, name, brand, model, serialNr, roomNr, buyDate, LocalDate.now(), price, status, comments, category));
       return true;
     } catch (RemoteException e){e.printStackTrace();}

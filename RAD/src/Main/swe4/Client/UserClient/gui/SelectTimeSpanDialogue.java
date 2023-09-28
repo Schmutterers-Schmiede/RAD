@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.DateChecker;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
@@ -33,7 +32,7 @@ public class SelectTimeSpanDialogue {
     double windowHeight = 110;
 
     this.device = device;
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
 
     Label lbStartDate = new Label("Von:");
     Label lbEndDate = new Label("Bis:");
@@ -89,9 +88,9 @@ public class SelectTimeSpanDialogue {
       return;
     }
 
-    if (repository.reservationsOverlap(invId, startDate, endDate)) {
-      ErrorPrompt.show("Ihr gewünschter Zeitraum steht mit anderen Reservierungen im Konflikt. Bitte nutzen sie die " +
-              "Prüffunktion für weitere Informationen.");
+    if (repository.getReservationConflicts(invId, startDate, endDate).length != 0) {
+      ErrorPrompt.show("Ihr gewünschter Zeitraum steht mit anderen Reservierungen\nim Konflikt. Bitte nutzen sie die " +
+              "Prüffunktion für weitere\nInformationen.");
     } else {
       LoginDialogue login = new LoginDialogue(stage, device, startDate, endDate);
       login.show();

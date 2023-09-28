@@ -1,4 +1,4 @@
-package swe4.Client.adminClient.gui;
+package swe4.Client.sharedUI;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,10 +15,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.adminClient.AdminPreferences;
+import swe4.Client.adminClient.gui.InfoPrompt;
 import swe4.Client.interfaces.IRepository;
-import swe4.Client.sharedUI.ErrorPrompt;
-import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Device;
 
 public class DeviceSearchDialogue {
@@ -27,11 +25,13 @@ public class DeviceSearchDialogue {
   private final ComboBox<String> cbSearchFor;
   private ObservableList<Device> searchResults;
   private final IRepository repository;
-  public DeviceSearchDialogue(Window owner){
+  private final boolean isUser;
+  public DeviceSearchDialogue(Window owner, boolean isUser){
+    this.isUser = isUser;
     double windowWidth = 250;
     double windowHeight = 110;
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
     stage = new Stage();
     Label lbSearchTerm = new Label("Suchbegriff:");
     Label lbSearchFor = new Label("Suchen nach:");
@@ -81,7 +81,7 @@ public class DeviceSearchDialogue {
   }
 
   private void search() {
-    String searchMode = cbSearchFor.getValue();
+    String searchMode = cbSearchFor.getValue().toString();
     String searchTerm = tfSearchTerm.getText();
 
     if(searchMode.isEmpty()){
@@ -95,23 +95,23 @@ public class DeviceSearchDialogue {
     }
 
     if(searchMode.equals("InventarNr")){
-      searchResults = FXCollections.observableArrayList(repository.searchDevicesByInventoryId(searchTerm));
+      searchResults = FXCollections.observableArrayList(repository.searchDevicesByInventoryId(searchTerm, isUser));
     }
 
     if(searchMode.equals("Bezeichnung")){
-      searchResults = FXCollections.observableArrayList(repository.searchDevicesByName(searchTerm));
+      searchResults = FXCollections.observableArrayList(repository.searchDevicesByName(searchTerm, isUser));
     }
 
     if(searchMode.equals("Marke")){
-      searchResults = FXCollections.observableArrayList(repository.searchDevicesByBrand(searchTerm));
+      searchResults = FXCollections.observableArrayList(repository.searchDevicesByBrand(searchTerm, isUser));
     }
 
     if(searchMode.equals("Modell")){
-      searchResults = FXCollections.observableArrayList(repository.searchDevicesByModel(searchTerm));
+      searchResults = FXCollections.observableArrayList(repository.searchDevicesByModel(searchTerm, isUser));
     }
 
     if(searchMode.equals("Kategorie")){
-      searchResults = FXCollections.observableArrayList(repository.searchDevicesByCategory(searchTerm));
+      searchResults = FXCollections.observableArrayList(repository.searchDevicesByCategory(searchTerm, isUser));
     }
 
     if(searchResults.isEmpty())

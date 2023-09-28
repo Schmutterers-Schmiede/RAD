@@ -12,7 +12,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.DateChecker;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
@@ -44,7 +43,7 @@ public class AddDeviceDialogue {
     double windowWidth = 400;
     double windowHeight = 550;
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
     ObservableList<String> deviceCategories = FXCollections.observableArrayList(repository.getDeviceCategories());
 
     Label lbInvId = new Label("InventarNr:");
@@ -76,7 +75,7 @@ public class AddDeviceDialogue {
     cbStatus.setItems(FXCollections.observableArrayList("verfügbar", "defekt"));
     cbStatus.setPromptText("Auswählen...");
 
-    cbCategory.setItems(FXCollections.observableArrayList(repository.getDeviceCategories()));
+    cbCategory.setItems(FXCollections.observableArrayList(deviceCategories));
     cbCategory.setPromptText("Auswählen...");
 
     GridPane formPane = new GridPane();
@@ -110,16 +109,13 @@ public class AddDeviceDialogue {
     formPane.add(lbPrice, 0, 8);
     formPane.add(tfPrice, 1, 8);
 
-    formPane.add(lbStatus, 0, 9);
-    formPane.add(cbStatus, 1, 9);
-
-    formPane.add(lbCategory, 0, 10);
-    formPane.add(cbCategory, 1, 10);
+    formPane.add(lbCategory, 0, 9);
+    formPane.add(cbCategory, 1, 9);
 
     VBox commentPane = new VBox();
     commentPane.getChildren().addAll(lbComments, taComments);
     GridPane.setColumnSpan(commentPane, 2);
-    formPane.add(commentPane, 0, 11);
+    formPane.add(commentPane, 0, 10);
 
 
     Button btnConfirmAddDevice = new Button("Hinzufügen");
@@ -133,9 +129,8 @@ public class AddDeviceDialogue {
             tfroomNr.getText(),
             dpBuy.getValue(),
             tfPrice.getText(),
-            cbStatus.getValue(),
-            cbCategory.getValue(),
-            taComments.getText()
+            taComments.getText(),
+            cbCategory.getValue().toString()
     ));
 
     Button btnCancel = new Button("Abbrechen");
@@ -166,7 +161,6 @@ public class AddDeviceDialogue {
                  String roomNr,
                  LocalDate buyDate,
                  String price,
-                 String status,
                  String comments,
                  String category) {
 
@@ -176,9 +170,10 @@ public class AddDeviceDialogue {
             brand.isEmpty() ||
             serialNr.isEmpty() ||
             roomNr.isEmpty() ||
-            DateChecker.notNull(buyDate) ||
+            !(DateChecker.notNull(buyDate)) ||
             price.isEmpty() ||
-            status.isEmpty()) {
+            category.isEmpty() ||
+            cbCategory.getValue() == null) {
       ErrorPrompt.show("Unvollständige Eingabe");
       return;
     }
@@ -200,13 +195,13 @@ public class AddDeviceDialogue {
             buyDate,
             LocalDate.now(),
             bdprice,
-            status,
             comments,
             category)) {
       stage.hide();
     } else {
       ErrorPrompt.show("Dieses Gerät existiert bereits.");
     }
+
   }
 
   public void show() {

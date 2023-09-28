@@ -4,12 +4,10 @@ import swe4.entities.Device;
 import swe4.entities.Reservation;
 import swe4.entities.User;
 
-import java.math.BigDecimal;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+
 
 public interface IServer extends Remote {
   // USERS ==========================================================================
@@ -26,16 +24,14 @@ public interface IServer extends Remote {
   boolean authenticateUser(String username, String password) throws RemoteException;
 
   // DEVICES =========================================================================
-  Device[] getAllDevicesAdmin() throws RemoteException;
+  Device[] getAllDevices(boolean isForUser) throws RemoteException;
 
-  Device[] searchDevicesByInventoryId(String invNr) throws RemoteException;
-  Device[] searchDevicesByName(String name) throws RemoteException;
-  Device[] searchDevicesByBrand(String brand) throws RemoteException;
-  Device[] searchDevicesByModel(String model) throws RemoteException;
-  Device[] searchDevicesByCategory(String category) throws RemoteException;
-  Device[] searchDevicesByInventoryCode(String invCode) throws RemoteException;
-
-  Device[] getAllDevicesUser() throws RemoteException;
+  Device[] searchDevicesByInventoryId(String invNr, boolean isForUser) throws RemoteException;
+  Device[] searchDevicesByName(String name, boolean isForUser) throws RemoteException;
+  Device[] searchDevicesByBrand(String brand, boolean isForUser) throws RemoteException;
+  Device[] searchDevicesByModel(String model, boolean isForUser) throws RemoteException;
+  Device[] searchDevicesByCategory(String category, boolean isForUser) throws RemoteException;
+  Device[] searchDevicesByInventoryCode(String invCode, boolean isForUser) throws RemoteException;
 
   void addDevice(Device device) throws RemoteException;
 

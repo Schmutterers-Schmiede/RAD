@@ -14,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.UserClient.UserPerferences;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.DeviceDetailView;
 import swe4.Client.sharedUI.ErrorPrompt;
@@ -37,7 +36,7 @@ public class RADUserMain extends Application {
     Locale.setDefault(Locale.GERMAN);
     primaryStage.setTitle("RAD");
 
-    repository = RepositoryFactory.getRepository(UserPerferences.usingServer());
+    repository = RepositoryFactory.getRepository();
 
     tbv = new TableView<>();
     tbv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -62,7 +61,7 @@ public class RADUserMain extends Application {
       }
     });
 
-    ObservableList<Device> devices = FXCollections.observableArrayList(repository.getAllDevicesUser());
+    ObservableList<Device> devices = FXCollections.observableArrayList(repository.getAllDevices(true));
     tbv.setItems(devices);
 
     Button btnReserve = new Button("Reservieren");

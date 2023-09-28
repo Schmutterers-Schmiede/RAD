@@ -37,7 +37,7 @@ public class ReservationDao implements IReservationDao{
 
     try (PreparedStatement statement = getConnection().prepareStatement(
             "SELECT   reservation_id,         users.username, users.name, " +
-                    "     inventory_id,           inventory_code  brand, " +
+                    "     inventory_id,           inventory_code,  brand, " +
                     "     model,                  start_date,     end_date," +
                     "     reservation_status_name " +
                 "FROM reservations " +
@@ -74,7 +74,7 @@ public class ReservationDao implements IReservationDao{
 
     try (PreparedStatement statement = getConnection().prepareStatement(
             "SELECT   reservation_id,         users.username, users.name, " +
-                    "     inventory_id,           inventory_code  brand, " +
+                    "     inventory_id,           inventory_code,  brand, " +
                     "     model,                  start_date,     end_date," +
                     "     reservation_status_name " +
                     "FROM reservations " +
@@ -112,10 +112,10 @@ public class ReservationDao implements IReservationDao{
 
     try (PreparedStatement statement = getConnection().prepareStatement(
             "SELECT   reservation_id,         users.username, users.name, " +
-                    "     inventory_id,           inventory_code  brand, " +
+                    "     inventory_id,           inventory_code,  brand, " +
                     "     model,                  start_date,     end_date," +
                     "     reservation_status_name " +
-                    "FROM reservations" +
+                    "FROM reservations " +
                     "JOIN users ON reservations.username = users.username " +
                     "JOIN devices ON reservations.device_id = devices.device_id " +
                     "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id " +
@@ -150,14 +150,14 @@ public class ReservationDao implements IReservationDao{
 
     try (PreparedStatement statement = getConnection().prepareStatement(
             "SELECT   reservation_id,         users.username, users.name, " +
-            "inventory_id,           inventory_code  brand,"+
+            "inventory_id,           inventory_code,  brand,"+
             "model,                  start_date,     end_date, "+
             "reservation_status_name "+
             "FROM reservations "+
             "JOIN users ON reservations.username = users.username "+
             "JOIN devices ON reservations.device_id = devices.device_id "+
             "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id "+
-            "WHERE reservation_status.reservation_status_id = (select reservation_status.reservation_status_id from reservation_status where reservation_status_name = " + status +") "+
+            "WHERE reservation_status.reservation_status_id = (select reservation_status_id from reservation_status where reservation_status_name = '" + status +"') "+
             "ORDER BY start_date DESC;")) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
@@ -188,7 +188,7 @@ public class ReservationDao implements IReservationDao{
 
     try (PreparedStatement statement = getConnection().prepareStatement(
             "SELECT   reservation_id,         users.username, users.name, " +
-                    "     inventory_id,           inventory_code  brand, " +
+                    "     inventory_id,           inventory_code,  brand, " +
                     "     model,                  start_date,     end_date, " +
                     "     reservation_status_name " +
                     "FROM reservations " +

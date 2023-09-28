@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.UserClient.UserPerferences;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.UIDimensions;
 import swe4.entities.Device;
@@ -31,7 +30,7 @@ public class ReservationSummary {
     double windowHeight = 500;
     double qrSize = 150;
 
-    repository = RepositoryFactory.getRepository(UserPerferences.usingServer());
+    repository = RepositoryFactory.getRepository();
     User user = repository.getUserByUsername(username);
 
     Label lbPrompt = new Label("Das Gerät wurde für sie Reserviert. Mit diesem\n" +

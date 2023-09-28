@@ -7,7 +7,6 @@ import swe4.entities.User;
 import java.math.BigDecimal;
 import java.rmi.Remote;
 import java.time.LocalDate;
-import java.util.List;
 
 public interface IRepository extends Remote {
 
@@ -25,16 +24,13 @@ public interface IRepository extends Remote {
   boolean authenticateUser(String username, String password);
 
   // DEVICES =========================================================================
-  Device[] getAllDevicesAdmin();
+  Device[] getAllDevices(boolean isForUser);
 
-  Device[] searchDevicesByInventoryId(String invNr);
-  Device[] searchDevicesByName(String name);
-  Device[] searchDevicesByBrand(String brand);
-  Device[] searchDevicesByModel(String model);
-  Device[] searchDevicesByCategory(String category);
-
-
-  Device[] getAllDevicesUser();
+  Device[] searchDevicesByInventoryId(String invNr, boolean isForUser);
+  Device[] searchDevicesByName(String name, boolean isForUser);
+  Device[] searchDevicesByBrand(String brand, boolean isForUser);
+  Device[] searchDevicesByModel(String model, boolean isForUser);
+  Device[] searchDevicesByCategory(String category, boolean isForUser);
 
   boolean addDevice(String inventoryId,
                     String inventoryCode,
@@ -46,7 +42,6 @@ public interface IRepository extends Remote {
                     LocalDate buyDate,
                     LocalDate logDate,
                     BigDecimal price,
-                    String status,
                     String comments,
                     String category);
 

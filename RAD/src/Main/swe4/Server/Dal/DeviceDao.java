@@ -1,23 +1,17 @@
 package swe4.Server.Dal;
 
 import swe4.entities.Device;
-import swe4.entities.User;
+
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.StringJoiner;
 
 public class DeviceDao implements IDeviceDao{
   private Connection connection;
-  private String     connectionString;
-  private String     userName;
-  private String     password;
-
-  public DeviceDao(String connectionString) {
-    this(connectionString, null, null);
-  }
+  private final String     connectionString;
+  private final String     userName;
+  private final String     password;
 
   public DeviceDao(String connectionString, String userName, String password){
     this.connectionString = connectionString;
@@ -53,19 +47,23 @@ public class DeviceDao implements IDeviceDao{
   }
 
   @Override
-  public Collection<Device> getAllForAdmin() {
+  public Collection<Device> getAll(boolean isForUser) {
     Collection<Device> c = new ArrayList<>();
-
-    try (PreparedStatement statement = getConnection().prepareStatement(
+    StringBuilder sb = new StringBuilder(
             "SELECT  device_id,          inventory_id,   inventory_code," +
                         "name,               brand,          model," +
                         "serial_nr,          room_nr,        buy_date," +
                         "log_date,           disposal_date,  price," +
                         "device_status_name, comments,       category_name  " +
-                        "FROM devices" +
-                "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                "JOIN categories on devices.category_id = categories.category_id" +
-                "ORDER BY device_id;")) {
+                        "FROM devices " +
+                "JOIN device_status on devices.device_status_id = device_status.device_status_id " +
+                "JOIN categories on devices.category_id = categories.category_id ");
+    if(isForUser){
+      sb.append(" WHERE devices.device_status_id != 4 ");
+    }
+
+      sb.append("ORDER BY inventory_id;");
+    try (PreparedStatement statement = getConnection().prepareStatement(sb.toString())) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           Device d = new Device(
@@ -98,20 +96,24 @@ public class DeviceDao implements IDeviceDao{
   }
 
   @Override
-  public Collection<Device> getAllForUser() {
+  public Collection<Device> getByInventoryId(String invId, boolean isForUser) {
     Collection<Device> c = new ArrayList<>();
-
-    try (PreparedStatement statement = getConnection().prepareStatement(
+    StringBuilder sb = new StringBuilder(
             "SELECT  device_id,          inventory_id,   inventory_code," +
-                        "name,               brand,          model," +
-                        "serial_nr,          room_nr,        buy_date," +
-                        "log_date,           disposal_date,  price," +
-                        "device_status_name, comments,       category_name  " +
-                "FROM devices" +
-                "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                "JOIN categories on devices.category_id = categories.category_id" +
-                "WHERE devices.device_status_id != 4" +
-                "ORDER BY device_id;")) {
+                    "name,               brand,          model," +
+                    "serial_nr,          room_nr,        buy_date," +
+                    "log_date,           disposal_date,  price," +
+                    "device_status_name, comments,       category_name  " +
+                    "FROM devices " +
+                    "JOIN device_status on devices.device_status_id = device_status.device_status_id " +
+                    "JOIN categories on devices.category_id = categories.category_id " +
+                    "WHERE inventory_id = '" + invId + "' "
+    );
+    if(isForUser){
+      sb.append("AND device_status_id != 4");
+    }
+      sb.append("ORDER BY device_id;");
+    try (PreparedStatement statement = getConnection().prepareStatement(sb.toString())) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           Device d = new Device(
@@ -143,20 +145,24 @@ public class DeviceDao implements IDeviceDao{
   }
 
   @Override
-  public Collection<Device> getByInventoryId(String invId) {
+  public Collection<Device> getByInventoryCode(String invId, boolean isForUser) {
     Collection<Device> c = new ArrayList<>();
-    try (PreparedStatement statement = getConnection().prepareStatement(
+    StringBuilder sb = new StringBuilder(
             "SELECT  device_id,          inventory_id,   inventory_code," +
                     "name,               brand,          model," +
                     "serial_nr,          room_nr,        buy_date," +
                     "log_date,           disposal_date,  price," +
                     "device_status_name, comments,       category_name  " +
-                    "FROM devices" +
-                    "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                    "JOIN categories on devices.category_id = categories.category_id" +
-                    "WHERE devices.device_status_id != 4" +
-                    "AND inventory_id = '" + invId + "' " +
-                    "ORDER BY device_id;")) {
+                    "FROM devices " +
+                    "JOIN device_status on devices.device_status_id = device_status.device_status_id " +
+                    "JOIN categories on devices.category_id = categories.category_id " +
+                    "WHERE inventory_code = '" + invId + "' "
+    );
+    if(isForUser){
+      sb.append("AND devices.device_status_id != 4 ");
+    }
+    sb.append("ORDER BY device_id;");
+    try (PreparedStatement statement = getConnection().prepareStatement(sb.toString())) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           Device d = new Device(
@@ -188,20 +194,24 @@ public class DeviceDao implements IDeviceDao{
   }
 
   @Override
-  public Collection<Device> getByInventoryCode(String invId) {
+  public Collection<Device> getByName(String name, boolean isForUser) {
     Collection<Device> c = new ArrayList<>();
-    try (PreparedStatement statement = getConnection().prepareStatement(
+    StringBuilder sb = new StringBuilder(
             "SELECT  device_id,          inventory_id,   inventory_code," +
                     "name,               brand,          model," +
                     "serial_nr,          room_nr,        buy_date," +
                     "log_date,           disposal_date,  price," +
                     "device_status_name, comments,       category_name  " +
-                    "FROM devices" +
-                    "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                    "JOIN categories on devices.category_id = categories.category_id" +
-                    "WHERE devices.device_status_id != 4" +
-                    "AND inventory_code = '" + invId + "' " +
-                    "ORDER BY device_id;")) {
+                    "FROM devices " +
+                    "JOIN device_status on devices.device_status_id = device_status.device_status_id " +
+                    "JOIN categories on devices.category_id = categories.category_id " +
+                    "WHERE name LIKE '" + name + "' "
+    );
+    if(isForUser){
+      sb.append("AND devices.device_status_id != 4 ");
+    }
+    sb.append("ORDER BY device_id;");
+    try (PreparedStatement statement = getConnection().prepareStatement(sb.toString())) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           Device d = new Device(
@@ -233,20 +243,24 @@ public class DeviceDao implements IDeviceDao{
   }
 
   @Override
-  public Collection<Device> getByName(String name) {
+  public Collection<Device> getByBrand(String brand, boolean isForUser) {
     Collection<Device> c = new ArrayList<>();
-    try (PreparedStatement statement = getConnection().prepareStatement(
+    StringBuilder sb = new StringBuilder(
             "SELECT  device_id,          inventory_id,   inventory_code," +
                     "name,               brand,          model," +
                     "serial_nr,          room_nr,        buy_date," +
                     "log_date,           disposal_date,  price," +
                     "device_status_name, comments,       category_name  " +
-                    "FROM devices" +
-                    "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                    "JOIN categories on devices.category_id = categories.category_id" +
-                    "WHERE devices.device_status_id != 4" +
-                    "AND name LIKE '" + name + "' " +
-                    "ORDER BY device_id;")) {
+            "FROM devices " +
+            "JOIN device_status on devices.device_status_id = device_status.device_status_id " +
+            "JOIN categories on devices.category_id = categories.category_id " +
+            "WHERE brand LIKE '" + brand + "' "
+    );
+    if(isForUser){
+      sb.append("AND devices.device_status_id != 4 ");
+    }
+    sb.append("ORDER BY device_id;");
+    try (PreparedStatement statement = getConnection().prepareStatement(sb.toString())) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           Device d = new Device(
@@ -278,20 +292,24 @@ public class DeviceDao implements IDeviceDao{
   }
 
   @Override
-  public Collection<Device> getByBrand(String brand) {
+  public Collection<Device> getByModel(String model, boolean isForUser) {
     Collection<Device> c = new ArrayList<>();
-    try (PreparedStatement statement = getConnection().prepareStatement(
-            "SELECT  device_id,          inventory_id,   inventory_code," +
-                    "name,               brand,          model," +
-                    "serial_nr,          room_nr,        buy_date," +
-                    "log_date,           disposal_date,  price," +
-                    "device_status_name, comments,       category_name  " +
-                    "FROM devices" +
-                    "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                    "JOIN categories on devices.category_id = categories.category_id" +
-                    "WHERE devices.device_status_id != 4" +
-                    "AND brand LIKE '" + brand + "' " +
-                    "ORDER BY device_id;")) {
+    StringBuilder sb = new StringBuilder(
+      "SELECT  device_id,          inventory_id,   inventory_code," +
+              "name,               brand,          model," +
+              "serial_nr,          room_nr,        buy_date," +
+              "log_date,           disposal_date,  price," +
+              "device_status_name, comments,       category_name  " +
+              "FROM devices " +
+              "JOIN device_status on devices.device_status_id = device_status.device_status_id " +
+              "JOIN categories on devices.category_id = categories.category_id " +
+              "WHERE model LIKE '" + model + "' "
+    );
+    if(isForUser){
+      sb.append("AND devices.device_status_id != 4 ");
+    }
+    sb.append("ORDER BY device_id;");
+    try (PreparedStatement statement = getConnection().prepareStatement(sb.toString())) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           Device d = new Device(
@@ -323,65 +341,24 @@ public class DeviceDao implements IDeviceDao{
   }
 
   @Override
-  public Collection<Device> getByModel(String model) {
+  public Collection<Device> getByCategory(String category, boolean isForUser) {
     Collection<Device> c = new ArrayList<>();
-    try (PreparedStatement statement = getConnection().prepareStatement(
+    StringBuilder sb = new StringBuilder(
             "SELECT  device_id,          inventory_id,   inventory_code," +
                     "name,               brand,          model," +
                     "serial_nr,          room_nr,        buy_date," +
                     "log_date,           disposal_date,  price," +
                     "device_status_name, comments,       category_name  " +
-                    "FROM devices" +
-                    "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                    "JOIN categories on devices.category_id = categories.category_id" +
-                    "WHERE devices.device_status_id != 4" +
-                    "AND name LIKE '" + model + "' " +
-                    "ORDER BY device_id;")) {
-      try (ResultSet resultSet = statement.executeQuery()) {
-        while (resultSet.next()) {
-          Device d = new Device(
-                  resultSet.getInt("device_id"),
-                  resultSet.getString("inventory_id"),
-                  resultSet.getString("inventory_code"),
-                  resultSet.getString("name"),
-                  resultSet.getString("brand"),
-                  resultSet.getString("model"),
-                  resultSet.getString("serial_nr"),
-                  resultSet.getString("room_nr"),
-                  resultSet.getDate("buy_date").toLocalDate(),
-                  resultSet.getDate("log_date").toLocalDate(),
-                  resultSet.getBigDecimal("price"),
-                  resultSet.getString("device_status_name"),
-                  resultSet.getString("comments"),
-                  resultSet.getString("category_name")
-          );
-          Date disposalDate = resultSet.getDate("disposal_date");
-          if(disposalDate != null)
-            d.setDisposalDate(disposalDate.toLocalDate());
-          c.add(d);
-        }
-      } // includes finally resultSet.close();
-    } catch (SQLException ex) {
-      throw new DataAccessException("SQLException: " + ex.getMessage());
+                    "FROM devices " +
+                    "JOIN device_status on devices.device_status_id = device_status.device_status_id " +
+                    "JOIN categories on devices.category_id = categories.category_id " +
+                    "WHERE category_name LIKE '" + category + "' "
+    );
+    if(isForUser){
+      sb.append("AND devices.device_status_id != 4 ");
     }
-    return c;
-  }
-
-  @Override
-  public Collection<Device> getByCategory(String category) {
-    Collection<Device> c = new ArrayList<>();
-    try (PreparedStatement statement = getConnection().prepareStatement(
-            "SELECT  device_id,          inventory_id,   inventory_code," +
-                    "name,               brand,          model," +
-                    "serial_nr,          room_nr,        buy_date," +
-                    "log_date,           disposal_date,  price," +
-                    "device_status_name, comments,       category_name  " +
-                    "FROM devices" +
-                    "JOIN device_status on devices.device_status_id = device_status.device_status_id" +
-                    "JOIN categories on devices.category_id = categories.category_id" +
-                    "WHERE devices.device_status_id != 4" +
-                    "AND category_name LIKE '" + category + "' " +
-                    "ORDER BY device_id;")) {
+    sb.append("ORDER BY device_id;");
+    try (PreparedStatement statement = getConnection().prepareStatement(sb.toString())) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           Device d = new Device(
@@ -420,10 +397,11 @@ public class DeviceDao implements IDeviceDao{
     try (PreparedStatement statement =
                  getConnection().prepareStatement("INSERT INTO devices (" +
                          "inventory_id,       inventory_code,       name, " +
-                         "brand,              serial_nr,            room_nr,              " +
-                         "buy_date,           log_date,             price,    " +
-                         "device_status_id,     comments,           category_id)" +
-                         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+                         "brand,              model,                serial_nr,            " +
+                         "room_nr,            buy_date,             log_date,             " +
+                         "price,              device_status_id,     comments,           " +
+                         "category_id)" +
+                         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
       statement.setString(1, device.getInventoryId());
       statement.setString(2, device.getInventoryCode());
       statement.setString(3, device.getName());
@@ -448,22 +426,22 @@ public class DeviceDao implements IDeviceDao{
   public void update(String invIdBeforeUpdate, Device device) {
 
     StringBuilder sqlString = new StringBuilder();
-    sqlString.append( "UPDATE devices" +
+    sqlString.append( "UPDATE devices " +
             "SET " +
-            "inventory_id = ? " +
-            "inventory_code = ? " +
-            "name = ? " +
-            "brand = ? " +
-            "model = ? " +
-            "serial_nr = ? " +
-            "room_nr = ? " +
-            "buy_date = ? " +
-            "log_date = ? " +
-            "price = ?" +
-            "device_status_id = ? " +
-            "comments = ? " +
-            "category_id = ?" +
-            "WHERE inventory_id = " + invIdBeforeUpdate + ";");
+            "inventory_id = ?," +
+            "inventory_code = ?," +
+            "name = ?, " +
+            "brand = ?, " +
+            "model = ?, " +
+            "serial_nr = ?, " +
+            "room_nr = ?, " +
+            "buy_date = ?, " +
+            "log_date = ?, " +
+            "price = ?, " +
+            "device_status_id = ?, " +
+            "comments = ?, " +
+            "category_id = ? " +
+            "WHERE inventory_id = '" + invIdBeforeUpdate + "';");
     boolean setDisposalDate = device.getDisposalDate() != null;
     if(setDisposalDate){
       sqlString.append(" disposal_date = ? ");
@@ -484,7 +462,7 @@ public class DeviceDao implements IDeviceDao{
       statement.setString(12, device.getComments());
       statement.setInt(13, getCategoryId(device.getCategory()));
       if(setDisposalDate) {
-        statement.setString(14, device.getModel());
+        statement.setDate(14, Date.valueOf(device.getDisposalDate()));
       }
       statement.executeUpdate();
     }
@@ -526,7 +504,7 @@ public class DeviceDao implements IDeviceDao{
 
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
-          return resultSet.getInt("category_id");
+          return resultSet.getInt("device_status_id");
         }
       } // includes finally resultSet.close();
     } catch (SQLException ex) {

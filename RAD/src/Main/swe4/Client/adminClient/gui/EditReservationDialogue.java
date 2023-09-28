@@ -11,7 +11,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.DateChecker;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
@@ -28,7 +27,7 @@ public class EditReservationDialogue {
     double windowWidth = 250;
     double windowHeight = 110;
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
 
     DatePicker dpStartDate = new DatePicker();
     DatePicker dpEndDate = new DatePicker();
@@ -85,8 +84,7 @@ public class EditReservationDialogue {
   }
 
   private void updateReservation(String invId, int reservationId, LocalDate startDate, LocalDate endDate) {
-    if( !(DateChecker.notNull(startDate) || DateChecker.notNull(endDate)) ||
-        !DateChecker.dateIsPresentOrFuture(startDate) ||
+    if( !(DateChecker.notNull(startDate)) && !(DateChecker.notNull(endDate)) ||
         !DateChecker.datesAreInOrder(startDate, endDate)){
       ErrorPrompt.show("Ungültige Eingabe");
       return;

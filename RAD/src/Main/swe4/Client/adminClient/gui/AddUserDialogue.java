@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
@@ -31,7 +30,7 @@ public class AddUserDialogue {
   private final IRepository repository;
 
   public AddUserDialogue(Window owner) {
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
 
     tfName = new TextField();
     tfUsername = new TextField();

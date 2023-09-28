@@ -11,13 +11,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.interfaces.IRepository;
-import swe4.Client.sharedUI.ConfirmationPrompt;
-import swe4.Client.sharedUI.DeviceDetailView;
-import swe4.Client.sharedUI.ErrorPrompt;
-import swe4.Client.sharedUI.UIDimensions;
+import swe4.Client.sharedUI.*;
 import swe4.entities.Device;
 
 public class DeviceManager {
@@ -25,10 +21,11 @@ public class DeviceManager {
   private ObservableList<Device> devices;
   private final TableView<Device> tbv;
   private final IRepository repository;
-  private final int windowWidth = 600;
-  private final int windowHeight = 650;
+
 
   public DeviceManager(Window owner) {
+    int windowWidth = 600;
+    int windowHeight = 650;
     double tbvWidth = windowWidth;
     double tbvHeight = windowHeight - 50;
 
@@ -102,11 +99,11 @@ public class DeviceManager {
     stage.initOwner(owner);
     stage.setResizable(false);
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
   }
 
   private void reset() {
-    tbv.setItems(FXCollections.observableArrayList(repository.getAllDevicesAdmin()));
+    tbv.setItems(FXCollections.observableArrayList(repository.getAllDevices(false)));
   }
 
   private void openDetailView(Device device) {
@@ -114,7 +111,7 @@ public class DeviceManager {
   }
 
   public void show() {
-    devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
+    devices = FXCollections.observableArrayList(repository.getAllDevices(false));
     tbv.setItems(devices);
     stage.show();
   }
@@ -122,14 +119,14 @@ public class DeviceManager {
   private void addDevice() {
     AddDeviceDialogue addDeviceDialogue = new AddDeviceDialogue(stage);
     addDeviceDialogue.show();
-    devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
+    devices.setAll(repository.getAllDevices(false));
     tbv.refresh();
   }
 
   private void deleteDevice(String invId) {
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie dieses Gerät löschen wollen?")) {
       repository.deleteDevice(invId);
-      devices = FXCollections.observableArrayList(repository.getAllDevicesAdmin());
+      devices.setAll(repository.getAllDevices(false));
       tbv.refresh();
     }
   }
@@ -140,13 +137,13 @@ public class DeviceManager {
     } else {
       EditDeviceDialogue editDeviceDialogue = new EditDeviceDialogue(stage, device);
       editDeviceDialogue.show();
-      devices.setAll(repository.getAllDevicesAdmin());
+      devices.setAll(repository.getAllDevices(false));
       tbv.refresh();
     }
   }
 
   private void search() {
-    DeviceSearchDialogue searchDialogue = new DeviceSearchDialogue(stage);
+    DeviceSearchDialogue searchDialogue = new DeviceSearchDialogue(stage, false);
     ObservableList<Device> searchResults = searchDialogue.show();
     if (searchResults != null)
       tbv.setItems(searchResults);

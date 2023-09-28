@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.RepositoryFactory;
 import swe4.Client.sharedUI.ConfirmationPrompt;
 import swe4.Client.sharedUI.ErrorPrompt;
@@ -92,7 +91,7 @@ public class UserManager {
     stage.initOwner(owner);
     stage.setResizable(false);
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
   }
 
   public void show() {

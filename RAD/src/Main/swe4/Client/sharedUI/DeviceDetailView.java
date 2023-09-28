@@ -17,7 +17,7 @@ public class DeviceDetailView {
   public static void show(Window owner, Device device) {
     Stage stage = new Stage();
     double windowWidth = 400;
-    double windowHeight = 330;
+    double windowHeight = 340;
     double commentPaneWidth = windowWidth - 10;
     double commentPaneHeight = 100;
 
@@ -26,6 +26,7 @@ public class DeviceDetailView {
     Label lbName = new Label("Bezeichnung:");
     Label lbBrand = new Label("Marke:");
     Label lbModel = new Label("Modell:");
+    Label lbCategory = new Label("Kategorie:");
     Label lbSNr = new Label("SerienNr:");
     Label lbRoomNr = new Label("RaumNr:");
     Label lbBuyDate = new Label("Kaufdatum:");
@@ -39,7 +40,8 @@ public class DeviceDetailView {
     Label lbNameValue = new Label(device.getName());
     Label lbBrandValue = new Label(device.getBrand());
     Label lbModelValue = new Label(device.getModel());
-    Label lbSNrValue = new Label(device.getStatus());
+    Label lbCategoryValue = new Label(device.getCategory());
+    Label lbSNrValue = new Label(device.getSerialNr());
     Label lbRoomNrValue = new Label(device.getRoomNr());
     Label lbBuyDateValue = new Label(device.getBuyDate().toString());
     Label lbLogDateValue = new Label(device.getLogDate().toString());
@@ -66,33 +68,36 @@ public class DeviceDetailView {
     dataPane.add(lbModel, 0, 4);
     dataPane.add(lbModelValue, 1, 4);
 
-    dataPane.add(lbSNr, 0, 5);
-    dataPane.add(lbSNrValue, 1, 5);
+    dataPane.add(lbCategory, 0, 5);
+    dataPane.add(lbCategoryValue, 1, 5);
 
-    dataPane.add(lbRoomNr, 0, 6);
-    dataPane.add(lbRoomNrValue, 1, 6);
+    dataPane.add(lbSNr, 0, 6);
+    dataPane.add(lbSNrValue, 1, 6);
 
-    dataPane.add(lbBuyDate, 0, 7);
-    dataPane.add(lbBuyDateValue, 1, 7);
+    dataPane.add(lbRoomNr, 0, 7);
+    dataPane.add(lbRoomNrValue, 1, 7);
 
-    dataPane.add(lbLogDate, 0, 8);
-    dataPane.add(lbLogDateValue, 1, 8);
+    dataPane.add(lbBuyDate, 0, 8);
+    dataPane.add(lbBuyDateValue, 1, 8);
 
-    dataPane.add(lbDisposalDate, 0, 9);
-    dataPane.add(lbDisposalDateValue, 1, 9);
+    dataPane.add(lbLogDate, 0, 9);
+    dataPane.add(lbLogDateValue, 1, 9);
 
-    dataPane.add(lbprice, 0, 10);
-    dataPane.add(lbpriceValue, 1, 10);
+    dataPane.add(lbDisposalDate, 0, 10);
+    dataPane.add(lbDisposalDateValue, 1, 10);
 
-    dataPane.add(lStatus, 0, 11);
-    dataPane.add(lStatusValue, 1, 11);
+    dataPane.add(lbprice, 0, 11);
+    dataPane.add(lbpriceValue, 1, 11);
+
+    dataPane.add(lStatus, 0, 12);
+    dataPane.add(lStatusValue, 1, 12);
 
     VBox rootPane = new VBox(UIDimensions.containerSpacing());
     rootPane.setPadding(UIDimensions.windowPadding());
     rootPane.getChildren().add(dataPane);
 
     String comments = device.getComments();
-    if (!comments.isEmpty()) {
+    if (comments != null) {
       windowHeight += commentPaneHeight;
       TextArea taComments = new TextArea(comments);
       Label lbComments = new Label("Anmerkungen:");
@@ -116,7 +121,7 @@ public class DeviceDetailView {
 
     Scene deviceDetailViewScene = new Scene(rootPane, windowWidth, windowHeight);
     stage.setScene(deviceDetailViewScene);
-    stage.setTitle("Device Detail View");
+    stage.setTitle("Gerätedetails");
     stage.setResizable(false);
     stage.initOwner(owner);
 

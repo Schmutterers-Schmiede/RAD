@@ -1,8 +1,4 @@
 package swe4.Server.Dal;
-
-import swe4.Server.Dal.DataAccessException;
-
-import swe4.Server.Dal.IUserDao;
 import swe4.entities.User;
 
 import java.sql.*;
@@ -15,9 +11,6 @@ public class UserDao implements IUserDao {
           connectionString,
           username,
           password;
-  public UserDao(String connectionString) {
-    this(connectionString, null, null);
-  }
 
   public UserDao(String connectionString, String username, String password) {
     this.connectionString = connectionString;
@@ -41,19 +34,23 @@ public class UserDao implements IUserDao {
   public Collection<User> getAll() {
     Collection<User> c = new ArrayList<>();
 
-    try (PreparedStatement statement = getConnection().prepareStatement("SELECT * FROM users")) {
+    try (PreparedStatement statement = getConnection().prepareStatement(
+            "SELECT * FROM users " +
+                "JOIN roles " +
+                "ON users.role_id = roles.role_id " +
+                "ORDER BY name;")) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
           c.add(new User(
                   resultSet.getString("name"),
                   resultSet.getString("username"),
                   resultSet.getString("password"),
-                  resultSet.getString("role")
+                  resultSet.getString("role_name")
           ));
         }
       } // includes finally resultSet.close();
     } catch (SQLException ex) {
-      throw new DataAccessException("SQLException: " + ex.getMessage());
+      throw new DataAccessException( "SQLException: " + ex.getMessage());
     } // includes finally statement.close()
 
     return c;
@@ -70,7 +67,7 @@ public class UserDao implements IUserDao {
                   resultSet.getString("username"),
                   resultSet.getString("name"),
                   resultSet.getString("password"),
-                  resultSet.getString("role")
+                  resultSet.getString("role_id")
           );
         }
       } // includes finally resultSet.close();
@@ -84,8 +81,11 @@ public class UserDao implements IUserDao {
   @Override
   public void add(User user) {
     try (PreparedStatement statement =
-                 getConnection().prepareStatement("insert into users "
-                                 + "(username, name, password, role) values (?, ?, ?, ?)")) {
+                 getConnection().prepareStatement(
+                         "INSERT INTO users "
+                           + "(username, name, password, role_id)" +
+                             "values (?, ?, ?, (SELECT role_id FROM roles WHERE role_name = ? " + "));"
+                 )) {
       statement.setString(1, user.getUsername());
       statement.setString(2, user.getName());
       statement.setString(3, user.getPassword());
@@ -139,7 +139,9 @@ public class UserDao implements IUserDao {
   @Override
   public void update(String usernameBeforeUpdate, User user ) {
     try (PreparedStatement statement = getConnection().prepareStatement(
-    "UPDATE users SET username= ?, name= ?, password= ?, role= ? WHERE username = ?")) {
+    "UPDATE users SET username= ?, name= ?, password= ?, " +
+            "role_id= (SELECT role_id FROM roles WHERE role_name = ?)" +
+            "WHERE username = ?")) {
       statement.setString(1, user.getUsername());
       statement.setString(2, user.getName());
       statement.setString(3, user.getPassword());

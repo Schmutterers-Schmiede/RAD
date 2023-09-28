@@ -86,6 +86,35 @@ public class Device implements Serializable {
     this.status = status;
     this.category = category;
   }
+  //constructor without status
+  public Device(
+          String inventoryId,
+          String inventoryCode,
+          String name,
+          String brand,
+          String model,
+          String serialNr,
+          String roomNr,
+          LocalDate buyDate,
+          LocalDate logDate,
+          BigDecimal price,
+          String comments,
+          String category
+  ) {
+    this.inventoryId = inventoryId;
+    this.inventoryCode = inventoryCode;
+    this.name = name;
+    this.brand = brand;
+    this.model = model;
+    this.serialNr = serialNr;
+    this.roomNr = roomNr;
+    this.comments = comments;
+    this.buyDate = buyDate;
+    this.logDate = logDate;
+    this.disposalDate = null;
+    this.price = price;
+    this.category = category;
+  }
 
 
   public String getInventoryId() {

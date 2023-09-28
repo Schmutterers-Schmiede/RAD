@@ -9,7 +9,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
@@ -20,8 +19,7 @@ import java.time.LocalDate;
 public class LoginDialogue {
   private final Stage stage = new Stage();
   private final IRepository repository;
-  private final double windowWidth = 250;
-  private final double windowHeight = 150;
+
   private final TextField tfUsername;
   private final PasswordField pwf;
   private final Device device;
@@ -30,7 +28,10 @@ public class LoginDialogue {
 
 
   public LoginDialogue(Window owner, Device device, LocalDate startDate, LocalDate endDate) {
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    double windowWidth = 250;
+    double windowHeight = 180;
+
+    repository = RepositoryFactory.getRepository();
     this.device = device;
     this.startDate = startDate;
     this.endDate = endDate;
@@ -58,7 +59,7 @@ public class LoginDialogue {
     passwordInput.getChildren().addAll(lbPassword, pwf);
 
     VBox inputPane = new VBox(UIDimensions.containerSpacing());
-    inputPane.getChildren().addAll(usernameInput, passwordInput);
+    inputPane.getChildren().addAll(lbPrompt, usernameInput, passwordInput);
     inputPane.setAlignment(Pos.CENTER);
 
     HBox buttonPane = new HBox(UIDimensions.buttonSpacing());

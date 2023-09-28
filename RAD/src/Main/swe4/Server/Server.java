@@ -7,7 +7,6 @@ import swe4.entities.Device;
 import swe4.entities.Reservation;
 import swe4.entities.User;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.Remote;
@@ -18,7 +17,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
 
 public class Server implements IServer {
   private static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/RAD_db?autoReconnect=true&useSSL=false";
@@ -33,7 +31,13 @@ public class Server implements IServer {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return users.toArray(new User[0]);
+    User[] result = new User[users.size()];
+    int i = 0;
+    for(var user : users){
+      result[i] = user;
+      i++;
+    }
+    return result;
   }
 
   @Override
@@ -86,10 +90,10 @@ public class Server implements IServer {
   }
 
   @Override
-  public Device[] getAllDevicesAdmin() throws RemoteException {
+  public Device[] getAllDevices(boolean isForUser) throws RemoteException {
     Collection<Device> devices = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getAllForAdmin();
+      devices = deviceDao.getAll(isForUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -97,10 +101,10 @@ public class Server implements IServer {
   }
 
   @Override
-  public Device[] searchDevicesByInventoryId(String invId) throws RemoteException {
+  public Device[] searchDevicesByInventoryId(String invId, boolean isForUser) throws RemoteException {
     Collection<Device> devices = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getByInventoryId(invId);
+      devices = deviceDao.getByInventoryId(invId, isForUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -108,10 +112,10 @@ public class Server implements IServer {
   }
 
   @Override
-  public Device[] searchDevicesByName(String name) throws RemoteException {
+  public Device[] searchDevicesByName(String name, boolean isForUser) throws RemoteException {
     Collection<Device> devices = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getByName(name);
+      devices = deviceDao.getByName(name, isForUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -119,10 +123,10 @@ public class Server implements IServer {
   }
 
   @Override
-  public Device[] searchDevicesByBrand(String brand) throws RemoteException {
+  public Device[] searchDevicesByBrand(String brand, boolean isForUser) throws RemoteException {
     Collection<Device> devices = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getByBrand(brand);
+      devices = deviceDao.getByBrand(brand, isForUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -130,10 +134,10 @@ public class Server implements IServer {
   }
 
   @Override
-  public Device[] searchDevicesByModel(String model) throws RemoteException {
+  public Device[] searchDevicesByModel(String model, boolean isForUser) throws RemoteException {
     Collection<Device> devices = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getByModel(model);
+      devices = deviceDao.getByModel(model, isForUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -141,10 +145,10 @@ public class Server implements IServer {
   }
 
   @Override
-  public Device[] searchDevicesByCategory(String category) throws RemoteException {
+  public Device[] searchDevicesByCategory(String category, boolean isForUser) throws RemoteException {
     Collection<Device> devices = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getByCategory(category);
+      devices = deviceDao.getByCategory(category, isForUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -152,21 +156,10 @@ public class Server implements IServer {
   }
 
   @Override
-  public Device[] searchDevicesByInventoryCode(String invCode) throws RemoteException {
+  public Device[] searchDevicesByInventoryCode(String invCode, boolean isForUser) throws RemoteException {
     Collection<Device> devices = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getByInventoryCode(invCode);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return devices.toArray(new Device[0]);
-  }
-
-  @Override
-  public Device[] getAllDevicesUser() throws RemoteException {
-    Collection<Device> devices = new ArrayList<>();
-    try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      devices = deviceDao.getAllForUser();
+      devices = deviceDao.getByInventoryCode(invCode, isForUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -195,7 +188,7 @@ public class Server implements IServer {
   public String[] getDeviceCategories() throws RemoteException {
     Collection<String> categories = new ArrayList<>();
     try(DeviceDao deviceDao = new DeviceDao(CONNECTION_STRING, USER_NAME, PASSWORD)){
-      deviceDao.getCategories();
+      categories = deviceDao.getCategories();
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -15,7 +15,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import swe4.Client.RepositoryFactory;
-import swe4.Client.adminClient.AdminPreferences;
 import swe4.Client.interfaces.IRepository;
 import swe4.Client.sharedUI.ErrorPrompt;
 import swe4.Client.sharedUI.UIDimensions;
@@ -31,7 +30,7 @@ public class ReservationSearchDialogue {
     double windowWidth = 250;
     double windowHeight = 110;
 
-    repository = RepositoryFactory.getRepository(AdminPreferences.usingServer());
+    repository = RepositoryFactory.getRepository();
     stage = new Stage();
     Label lbSearchTerm = new Label("Suchbegriff:");
     Label lbSearchFor = new Label("Suchen nach:");
