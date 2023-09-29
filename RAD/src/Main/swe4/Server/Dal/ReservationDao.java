@@ -41,7 +41,7 @@ public class ReservationDao implements IReservationDao{
                     "     model,                  start_date,     end_date," +
                     "     reservation_status_name " +
                 "FROM reservations " +
-                "JOIN users ON reservations.username = users.username " +
+                "JOIN users ON reservations.user_id = users.user_id " +
                 "JOIN devices ON reservations.device_id = devices.device_id " +
                 "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id " +
                 "ORDER BY start_date DESC")) {
@@ -78,7 +78,7 @@ public class ReservationDao implements IReservationDao{
                     "     model,                  start_date,     end_date," +
                     "     reservation_status_name " +
                     "FROM reservations " +
-                    "JOIN users ON reservations.username = users.username " +
+                    "JOIN users ON reservations.user_id = users.user_id " +
                     "JOIN devices ON reservations.device_id = devices.device_id " +
                     "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id " +
                     "WHERE users.name = '" + name + "' " +
@@ -116,7 +116,7 @@ public class ReservationDao implements IReservationDao{
                     "     model,                  start_date,     end_date," +
                     "     reservation_status_name " +
                     "FROM reservations " +
-                    "JOIN users ON reservations.username = users.username " +
+                    "JOIN users ON reservations.user_id = users.user_id " +
                     "JOIN devices ON reservations.device_id = devices.device_id " +
                     "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id " +
                     "WHERE inventory_id = '" + invId + "' " +
@@ -154,7 +154,7 @@ public class ReservationDao implements IReservationDao{
             "model,                  start_date,     end_date, "+
             "reservation_status_name "+
             "FROM reservations "+
-            "JOIN users ON reservations.username = users.username "+
+            "JOIN users ON reservations.user_id = users.user_id "+
             "JOIN devices ON reservations.device_id = devices.device_id "+
             "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id "+
             "WHERE reservation_status.reservation_status_id = (select reservation_status_id from reservation_status where reservation_status_name = '" + status +"') "+
@@ -192,7 +192,7 @@ public class ReservationDao implements IReservationDao{
                     "     model,                  start_date,     end_date, " +
                     "     reservation_status_name " +
                     "FROM reservations " +
-                    "JOIN users ON reservations.username = users.username " +
+                    "JOIN users ON reservations.user_id = users.user_id " +
                     "JOIN devices ON reservations.device_id = devices.device_id " +
                     "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id " +
                     "WHERE inventory_id = '" + invId + "' " +
