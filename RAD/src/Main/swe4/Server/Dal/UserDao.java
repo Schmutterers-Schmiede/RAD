@@ -58,16 +58,19 @@ public class UserDao implements IUserDao {
 
   @Override
   public User getByUsername(String username) {
-    try (PreparedStatement statement = getConnection().prepareStatement("SELECT * FROM users WHERE username = ?")) {
+    try (PreparedStatement statement = getConnection().prepareStatement(
+            "SELECT * FROM users " +
+                "JOIN roles ON users.role_id = roles.role_id " +
+                "WHERE username = ? ;")) {
       statement.setString(1, username);
 
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
           return new User(
-                  resultSet.getString("username"),
                   resultSet.getString("name"),
+                  resultSet.getString("username"),
                   resultSet.getString("password"),
-                  resultSet.getString("role_id")
+                  resultSet.getString("role_name")
           );
         }
       } // includes finally resultSet.close();
@@ -163,5 +166,18 @@ public class UserDao implements IUserDao {
     catch (SQLException ex) {
       throw new DataAccessException("Problems closing database connection: SQLException: " + ex.getMessage());
     } // catch
+  }
+
+  @Override
+  public int getCount() throws DataAccessException {
+    int count = 0;
+    try (Statement statement = getConnection().createStatement();
+         ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM users;")) {
+      if (resultSet.next()) count = resultSet.getInt(1);
+    }
+    catch (SQLException ex) {
+      throw new DataAccessException("SQLException: " + ex.getMessage());
+    } // includes finally resultSet.close(); statement.close();
+    return count;
   }
 }

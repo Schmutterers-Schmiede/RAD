@@ -196,8 +196,8 @@ public class ReservationDao implements IReservationDao{
                     "JOIN devices ON reservations.device_id = devices.device_id " +
                     "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id " +
                     "WHERE inventory_id = '" + invId + "' " +
-                    "AND (start_date between '" + startDate.toString() + "' AND '" + endDate.toString() + "' " +
-                      "OR end_date between '" + startDate.toString() + "' AND '" + endDate.toString() + "' )" +
+                    "AND ((start_date between '" + startDate.toString() + "' AND '" + endDate.toString() + "' " +
+                      "OR end_date between '" + startDate.toString() + "' AND '" + endDate.toString() + "' ))" +
                     "ORDER BY start_date DESC;")) {
       try (ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
@@ -226,8 +226,8 @@ public class ReservationDao implements IReservationDao{
   public void add(String username, String invId, LocalDate startDate, LocalDate endDate) {
     try (PreparedStatement statement =
                  getConnection().prepareStatement("insert into reservations  "
-                         + "(username, device_id, start_date, end_date, reservation_status_id) " +
-                         "values (?, " +
+                         + "(user_id, device_id, start_date, end_date, reservation_status_id) " +
+                         "values ((SELECT user_id FROM users WHERE username = ?), " +
                          "(select device_id from devices where inventory_id = '" + invId + "')," +
                          " ?, " +
                          " ?," +
@@ -269,6 +269,44 @@ public class ReservationDao implements IReservationDao{
       throw new DataAccessException("SQLException: " + ex.getMessage());
     }
   }
+
+  @Override
+  public Reservation getById(int id) {
+    Reservation res = null;
+
+    try (PreparedStatement statement = getConnection().prepareStatement(
+            "SELECT   reservation_id,         users.username, users.name, " +
+                    "     inventory_id,           inventory_code,  brand, " +
+                    "     model,                  start_date,     end_date, " +
+                    "     reservation_status_name " +
+                    "FROM reservations " +
+                    "JOIN users ON reservations.user_id = users.user_id " +
+                    "JOIN devices ON reservations.device_id = devices.device_id " +
+                    "JOIN reservation_status ON reservations.reservation_status_id = reservation_status.reservation_status_id " +
+                    "WHERE reservation_id = " + id + ";")) {
+      try (ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          res = new Reservation(
+                  resultSet.getInt("reservation_id"),
+                  resultSet.getString("username"),
+                  resultSet.getString("name"),
+                  resultSet.getString("inventory_id"),
+                  resultSet.getString("inventory_code"),
+                  resultSet.getString("brand"),
+                  resultSet.getString("model"),
+                  resultSet.getDate("start_date").toLocalDate(),
+                  resultSet.getDate("end_date").toLocalDate(),
+                  resultSet.getString("reservation_status_name")
+          );
+        }
+      } // includes finally resultSet.close();
+    } catch (SQLException ex) {
+      throw new DataAccessException("SQLException: " + ex.getMessage());
+    } // includes finally statement.close()
+
+    return res;
+  }
+
   @Override
   public void close() throws Exception {
     try {

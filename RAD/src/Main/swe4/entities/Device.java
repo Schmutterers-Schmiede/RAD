@@ -114,6 +114,7 @@ public class Device implements Serializable {
     this.disposalDate = null;
     this.price = price;
     this.category = category;
+    this.status = "verfügbar";
   }
 
 

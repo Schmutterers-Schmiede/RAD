@@ -13,4 +13,5 @@ public interface IUserDao extends AutoCloseable{
   boolean authenticate(String username, String password);
   void update(String usernameBeforeUpdate, User user);
 
+  int getCount();
 }

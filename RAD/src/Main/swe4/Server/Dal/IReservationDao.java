@@ -14,5 +14,6 @@ public interface IReservationDao extends AutoCloseable {
   void add(String username, String invId, LocalDate startDate, LocalDate endDate);
   void update(int reservationId, LocalDate startDate, LocalDate endDate);
   void delete(int reservationId);
+  Reservation getById(int id);
 
 }

@@ -13,6 +13,7 @@ public interface IDeviceDao extends AutoCloseable {
   Collection<Device> getByBrand(String brand, boolean isForUser);
   Collection<Device> getByModel(String model, boolean isForUser);
   Collection<Device> getByCategory(String category, boolean isForUser);
+  int getCount();
   void add(Device device);
   void update(String invIdBeforeUpdate, Device device);
   void delete(String invId);

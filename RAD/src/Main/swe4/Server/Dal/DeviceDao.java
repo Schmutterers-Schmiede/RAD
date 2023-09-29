@@ -523,4 +523,16 @@ public class DeviceDao implements IDeviceDao{
       throw new DataAccessException("Problems closing database connection: SQLException: " + ex.getMessage());
     } // catch
   }
+
+  public int getCount() throws DataAccessException {
+    int count = 0;
+    try (Statement statement = getConnection().createStatement();
+         ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM devices;")) {
+      if (resultSet.next()) count = resultSet.getInt(1);
+    }
+    catch (SQLException ex) {
+      throw new DataAccessException("SQLException: " + ex.getMessage());
+    } // includes finally resultSet.close(); statement.close();
+    return count;
+  }
 }
