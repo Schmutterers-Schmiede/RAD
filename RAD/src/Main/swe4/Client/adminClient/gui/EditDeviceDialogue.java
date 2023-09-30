@@ -236,7 +236,7 @@ public class EditDeviceDialogue {
             category)) {
       stage.hide();
     } else {
-      ErrorPrompt.show("Dieses Gerät existiert bereits.");
+      ErrorPrompt.show("Inventarnummer oder InventarCode existiert bereits.");
     }
   }
 

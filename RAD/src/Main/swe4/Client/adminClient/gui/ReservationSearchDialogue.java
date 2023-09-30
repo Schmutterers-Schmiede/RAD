@@ -81,7 +81,7 @@ public class ReservationSearchDialogue {
 
   private void search() {
     String searchMode = cbSearchFor.getValue();
-    String searchTerm = tfSearchTerm.getText();
+    String searchTerm = tfSearchTerm.getText().toLowerCase();
 
     if(searchMode.isEmpty()){
       ErrorPrompt.show("Bitte Suchkriterium auswählen.");

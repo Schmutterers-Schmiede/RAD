@@ -1,6 +1,7 @@
 package swe4.Client;
 
 import swe4.Client.interfaces.IRepository;
+import swe4.Server.Dal.ReservationDao;
 import swe4.Server.IServer;
 import swe4.entities.Device;
 import swe4.entities.Reservation;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.util.Collection;
 
 
 public class ServerRepository implements IRepository {
@@ -171,10 +173,11 @@ public class ServerRepository implements IRepository {
   @Override
   public boolean updateDevice(int deviceId, String inventoryIdBeforeUpdate, String inventoryCodeBeforeUpdate, String inventoryId, String inventoryCode, String name, String brand, String model, String serialNr, String roomNr, LocalDate buyDate, LocalDate disposalDate, BigDecimal price, String status, String comments, String category) {
     try{
-      if(!inventoryCodeBeforeUpdate.equals(inventoryCode) &&
-          serverProxy.searchDevicesByInventoryId(inventoryIdBeforeUpdate, false).length != 0 ||
-         !inventoryIdBeforeUpdate.equals(inventoryId) &&
-          serverProxy.searchDevicesByInventoryCode(inventoryCodeBeforeUpdate, false).length != 0){
+      if( (!inventoryCodeBeforeUpdate.equals(inventoryCode)) &&
+          serverProxy.searchDevicesByInventoryCode(inventoryCode, false).length > 0
+              ||
+          (!inventoryIdBeforeUpdate.equals(inventoryId)) &&
+          serverProxy.searchDevicesByInventoryId(inventoryId, false).length > 0){
         return false;
       }
 
@@ -202,9 +205,12 @@ public class ServerRepository implements IRepository {
   @Override
   public boolean updateReservation(String invId, int reservationId, LocalDate startDate, LocalDate endDate) {
     try{
-      if(serverProxy.getReservationConflicts(invId, startDate, endDate).length != 0){
-        return false;
+      Reservation[] conflicts = serverProxy.getReservationConflicts(invId, startDate, endDate);
+      for(Reservation res : conflicts){
+        if(res.getReservationId() != reservationId)
+          return false;
       }
+
       serverProxy.updateReservation(reservationId, startDate, endDate);
       return true;
     }catch (RemoteException e){e.printStackTrace();}

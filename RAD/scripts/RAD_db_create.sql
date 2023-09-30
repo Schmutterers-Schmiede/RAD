@@ -29,9 +29,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `RAD_db`.`users` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(30) NOT NULL,
-  `name` VARCHAR(100) NOT NULL,
-  `password` VARCHAR(64) NOT NULL,
+  `username` VARCHAR(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` VARCHAR(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` VARCHAR(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `role_id` INT NOT NULL,
   PRIMARY KEY (`user_id`),
   INDEX `role_id_idx` (`role_id` ASC) VISIBLE,
@@ -49,7 +49,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `RAD_db`.`device_status` (
   `device_status_id` INT NOT NULL AUTO_INCREMENT,
-  `device_status_name` VARCHAR(45) NOT NULL,
+  `device_status_name` VARCHAR(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`device_status_id`),
   UNIQUE INDEX `status_name_UNIQUE` (`device_status_name` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -60,7 +60,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `RAD_db`.`categories` (
   `category_id` INT NOT NULL AUTO_INCREMENT,
-  `category_name` VARCHAR(45) NOT NULL,
+  `category_name` VARCHAR(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`category_id`))
 ENGINE = InnoDB;
 
@@ -72,9 +72,9 @@ CREATE TABLE IF NOT EXISTS `RAD_db`.`devices` (
   `device_id` INT NOT NULL AUTO_INCREMENT,
   `inventory_id` VARCHAR(8) NOT NULL,
   `inventory_code` VARCHAR(9) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  `brand` VARCHAR(45) NOT NULL,
-  `model` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `brand` VARCHAR(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model` VARCHAR(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `serial_nr` VARCHAR(45) NOT NULL,
   `room_nr` VARCHAR(10) NOT NULL,
   `buy_date` DATE NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `RAD_db`.`devices` (
   `disposal_date` DATE NULL,
   `price` DECIMAL(5,2) NOT NULL,
   `device_status_id` INT NOT NULL,
-  `comments` TEXT(300) NULL,
+  `comments` TEXT(300) COLLATE utf8mb4_unicode_ci NULL,
   `category_id` INT NOT NULL,
   PRIMARY KEY (`device_id`),
   INDEX `category_id_idx` (`category_id` ASC) VISIBLE,
@@ -107,7 +107,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `RAD_db`.`reservation_status` (
   `reservation_status_id` INT NOT NULL AUTO_INCREMENT,
-  `reservation_status_name` VARCHAR(45) NOT NULL,
+  `reservation_status_name` VARCHAR(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`reservation_status_id`),
   UNIQUE INDEX `reservation_status_name_UNIQUE` (`reservation_status_name` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -164,6 +164,20 @@ BEGIN
         FROM reservations
         WHERE reservation_status_id = 3
     );
+	
+	-- Update reservations that are starting today
+	UPDATE reservations
+	SET reservation_status_id = 2
+	WHERE start_date = CURDATE();
+	
+	-- Update associated devices
+	UPDATE devices
+	SET device_status_id = 2
+	WHERE device_id IN (
+		SELECT device_id
+		FROM reservations
+		WHERE start_date = CURDATE()
+	);
 END;
 //
 

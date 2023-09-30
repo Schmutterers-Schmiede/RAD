@@ -56,7 +56,7 @@ public class AddUserDialogue {
     Label lbName = new Label("Name:");
     Label lbUsername = new Label("Benutzername:");
     Label lbPassword = new Label("Password");
-    Label lbType = new Label("Art:");
+    Label lbType = new Label("Rolle:");
 
     GridPane formPane = new GridPane();
     formPane.setHgap(UIDimensions.gridPaneSpacing());
