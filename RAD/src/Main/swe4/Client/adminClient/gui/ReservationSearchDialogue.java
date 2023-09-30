@@ -71,7 +71,7 @@ public class ReservationSearchDialogue {
 
 
     stage.setScene(scene);
-    stage.setTitle("RAD Admin Gerätesuche");
+    stage.setTitle("RAD Admin Reservierungssuche");
     stage.initModality(Modality.WINDOW_MODAL);
     stage.initOwner(owner);
     stage.setResizable(false);
@@ -106,7 +106,7 @@ public class ReservationSearchDialogue {
     }
 
     if(searchResults.isEmpty())
-      InfoPrompt.show("Keine Geräte gefunden");
+      InfoPrompt.show("Keine Reservierungen gefunden");
     else stage.hide();
   }
 

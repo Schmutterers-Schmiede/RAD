@@ -130,6 +130,10 @@ public class ReservationManager {
 
 
   private void deleteReservation(int reservationId) {
+    if(!tbv.getSelectionModel().getSelectedItem().getStatus().equals("reserviert")){
+      ErrorPrompt.show("Nur zukünftige Reservierungen können storiert werden.");
+      return;
+    }
     if (ConfirmationPrompt.show("Sind Sie sicher, dass sie diese Reservierung stornieren wollen?")) {
       repository.deleteReservation(reservationId);
       reservations.setAll(repository.getAllReservations());

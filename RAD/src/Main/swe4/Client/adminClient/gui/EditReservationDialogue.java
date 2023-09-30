@@ -73,7 +73,7 @@ public class EditReservationDialogue {
 
     Scene editUserScene = new Scene(rootPane, windowWidth, windowHeight);
     stage.setScene(editUserScene);
-    stage.setTitle("Edit Reservation");
+    stage.setTitle("Reservierung bearbeiten");
     stage.initModality(Modality.WINDOW_MODAL);
     stage.initOwner(owner);
     stage.setResizable(false);

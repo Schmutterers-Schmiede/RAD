@@ -146,7 +146,7 @@ public class AddDeviceDialogue {
 
     Scene addUserScene = new Scene(rootPane, windowWidth, windowHeight);
     stage.setScene(addUserScene);
-    stage.setTitle("Add Device");
+    stage.setTitle("Gerät hinzufügen");
     stage.initModality(Modality.WINDOW_MODAL);
     stage.initOwner(owner);
     stage.setResizable(false);

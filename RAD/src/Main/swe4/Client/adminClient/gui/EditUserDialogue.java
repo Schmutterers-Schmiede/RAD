@@ -85,7 +85,7 @@ public class EditUserDialogue {
 
     Scene editUserScene = new Scene(rootPane);
     stage.setScene(editUserScene);
-    stage.setTitle("Edit User");
+    stage.setTitle("Benutzer bearbeiten");
     stage.initModality(Modality.WINDOW_MODAL);
     stage.initOwner(owner);
     stage.setResizable(false);

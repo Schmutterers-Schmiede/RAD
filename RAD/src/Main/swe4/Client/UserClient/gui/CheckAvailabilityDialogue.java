@@ -70,7 +70,7 @@ public class CheckAvailabilityDialogue {
     Scene scene = new Scene(rootPane, windowWidth, windowHeight);
 
     stage.setScene(scene);
-    stage.setTitle("Check Availability");
+    stage.setTitle("Verfügbarkeit überprüfen");
     stage.initModality(Modality.WINDOW_MODAL);
     stage.initOwner(owner);
     stage.setResizable(false);
